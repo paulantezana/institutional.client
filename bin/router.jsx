@@ -1,41 +1,46 @@
-import React from 'react';
-import { routerRedux, Route, Switch } from 'dva/router';
+import React, { Component } from "react";
+import {
+    BrowserRouter as Router,
+    Route,
+    Link,
+    Redirect,
+    Switch,
+    withRouter
+} from "react-router-dom";
 
-const { ConnectedRouter } = routerRedux;
+import { authenticate } from './helpers/authenticate.js';
 
 // Import page components
-import Home from './components/core/home.jsx';
-import Login from './components/core/user/login.jsx';
+import Home from './components/core/app.jsx';
+import Login from './components/core/login.jsx';
 import NotFound from './components/core/404.jsx';
-import Public from './components/core/public.jsx';
 
-function RouterConfig({ history }) {
+function RouterConfig() {
     return (
-        <ConnectedRouter history={history}>
+        <Router>
             <Switch>
-                <Route path="/" exact component={Public}/>
-                <Route exact path="/app" component={Home} />
+                <PrivateRoute exact path="/" component={Home} />
                 <Route exact path="/login" component={Login} />
                 <Route component={NotFound} />
             </Switch>
-        </ConnectedRouter>
+        </Router>
     );
 }
 
 export default RouterConfig;
 
-// const PrivateRoute = ({ component: Component, rest }) => (
-//     <Route
-//       {...rest}
-//       render={props =>
-//         authenticate()
-//             ? ( <Component {...props} /> )
-//             : ( <Redirect to={{
-//               pathname: "/login",
-//               state: { from: props.location }
-//             }}
-//           />
-//         )
-//       }
-//     />
-// );
+const PrivateRoute = ({ component: Component, rest }) => (
+    <Route
+      {...rest}
+      render={props =>
+        authenticate()
+            ? ( <Component {...props} /> )
+            : ( <Redirect to={{
+              pathname: "/login",
+              state: { from: props.location }
+            }}
+          />
+        )
+      }
+    />
+);

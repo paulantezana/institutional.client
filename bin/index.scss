@@ -7,6 +7,15 @@ body{
     height: 100%;
 }
 
+.basic-layout{
+    min-height: 100%;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
 // Overide
 // Sobreescribiendo los estilos por defecto que vienen desde la libreria
 .ant-layout-header{

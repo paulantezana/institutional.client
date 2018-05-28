@@ -4,7 +4,7 @@ const path                  = require('path');
 
 module.exports = {
     entry:{
-        index        : './bin/index.js',
+        index        : './bin/index.jsx',
     },
 
     output: {

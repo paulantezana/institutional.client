@@ -2,30 +2,19 @@ import React, { Component } from "react";
 import { Layout, Menu, Breadcrumb, Icon, Avatar, Badge } from 'antd';
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
-
-
 import { Row, Col } from 'antd';
+import { connect } from 'react-redux';
 
-class Home extends Component{
-    constructor(props){
-        super(props)
-        this.state = {
-            collapsed: false
-        }
-        this.toggle = this.toggle.bind(this)
-    }
+import Aside from './dashboard/aside.jsx';
+import HeaderApp from './dashboard/header.jsx';
 
-    toggle() {
-        this.setState({
-            collapsed: !this.state.collapsed,
-        });
-    }
-    
+
+class App extends Component{
     render(){
         return (
             <Layout>
 
-                <Sider trigger={null} collapsible collapsed={this.state.collapsed} style={{ background: '#fff' }}>
+                <Sider trigger={null} collapsible collapsed={this.props.collapsed} style={{ background: '#fff' }}>
                     <div className="logo" />
                     <Menu theme="light" defaultSelectedKeys={['1']} mode="vertical" style={{ height: '100%' }}>
                         <Menu.Item key="1">
@@ -76,11 +65,9 @@ class Home extends Component{
 
                 <Layout>
                     <Header style={{ background: '#fff', padding: 0 }}>
-
-
                         <Row type="flex" justify="space-between">
                             <Col>
-                                <Icon className="trigger" type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'} onClick={this.toggle}/>
+                                <Icon className="trigger" type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'} onClick={this.props.toggle}/>
                             </Col>
                             <Col>
                                 {/* <Badge count={8} dot>
@@ -102,7 +89,7 @@ class Home extends Component{
                                     </SubMenu>
                                 </Menu>
 
-                                {/* <Icon type="menu-unfold"/> */}
+                                <Icon type="menu-unfold"/>
                             </Col>
                         </Row>
                         
@@ -124,5 +111,21 @@ class Home extends Component{
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        collapsed: state.collapsed
+    }
+}
 
-export default Home;
+const mapDispatchToProps = distpatch => {
+    return{
+        toggle(){
+            distpatch({
+                type: "TOGGLE_SIDE",
+                collapsed: !props.collapsed
+            })
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
