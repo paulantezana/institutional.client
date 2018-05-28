@@ -1,7 +1,10 @@
 import React, { Component } from "react";
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Avatar, Badge } from 'antd';
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
+
+
+import { Row, Col } from 'antd';
 
 class Home extends Component{
     constructor(props){
@@ -11,11 +14,13 @@ class Home extends Component{
         }
         this.toggle = this.toggle.bind(this)
     }
+
     toggle() {
         this.setState({
             collapsed: !this.state.collapsed,
         });
     }
+    
     render(){
         return (
             <Layout>
@@ -75,9 +80,34 @@ class Home extends Component{
 
                 <Layout>
                     <Header style={{ background: '#fff', padding: 0 }}>
-                        <Icon
-                        className="trigger"
-                        type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'} onClick={this.toggle}/>
+
+
+                        <Row type="flex" justify="space-between">
+                            <Col>
+                                <Icon className="trigger" type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'} onClick={this.toggle}/>
+                            </Col>
+                            <Col>
+                                <Badge count={8} dot>
+                                    <Icon type="bell" />
+                                </Badge>
+                                <Badge count={1} dot>
+                                    <Icon type="wechat"/>
+                                </Badge>
+                                <Badge count={5} dot>
+                                    <Icon type="global" />
+                                </Badge>
+                                <Menu title={<span><Icon type="book" /><span>Notas</span></span>}>
+                                    <Menu.Item key="2">
+                                        <Icon type="desktop" />
+                                        <span>Option 2</span>
+                                    </Menu.Item>
+                                </Menu>
+
+                                <Icon type="menu-unfold"/>
+                            </Col>
+                        </Row>
+                        
+
                     </Header>
                     <Content style={{ margin: '0 16px' }}>
                         <Breadcrumb style={{ margin: '16px 0' }}>

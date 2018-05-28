@@ -1,7 +1,15 @@
 body{
     min-height: 100vh;
+    background: #F0F2F5;
 }
 .root,
 .ant-layout{
     height: 100%;
+}
+
+// Overide
+// Sobreescribiendo los estilos por defecto que vienen desde la libreria
+.ant-layout-header{
+    height: 50px;
+    line-height: 50px;
 }
