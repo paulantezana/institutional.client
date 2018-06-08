@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import PropTypes from 'prop-types';
+
 import { Layout, Menu, Breadcrumb, Icon, Avatar, Badge } from 'antd';
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -8,7 +10,7 @@ const HeaderApp = (props)=>(
     <Header style={{ background: '#fff', padding: 0 }}>
         <Row type="flex" justify="space-between">
             <Col>
-                {/* <Icon className="trigger" type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'} onClick={this.toggle}/> */}
+                <Icon className="trigger" type={props.collapsed ? 'menu-unfold' : 'menu-fold'} onClick={props.onToggleSide}/>
             </Col>
             <Col>
                 {/* <Badge count={8} dot>
@@ -37,5 +39,10 @@ const HeaderApp = (props)=>(
 
     </Header>
 );
+
+HeaderApp.prototype = {
+    onToggleSide:  PropTypes.func.isRequired,
+    collapsed: PropTypes.bool.isRequired,
+}
 
 export default HeaderApp;

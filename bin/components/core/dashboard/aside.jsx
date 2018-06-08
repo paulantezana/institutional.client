@@ -1,11 +1,13 @@
 import React, { Component } from "react";
+import PropTypes from 'prop-types';
+import { Link } from "react-router-dom";
 
 import { Layout, Menu,  Icon } from 'antd';
 const { Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 
 const Aside = (props)=>(
-    <Sider trigger={null} collapsible collapsed={true} style={{ background: '#fff' }}>
+    <Sider trigger={null} collapsible collapsed={props.collapsed} style={{ background: '#fff' }} collapsedWidth="0">
         <div className="logo" />
         <Menu theme="light" defaultSelectedKeys={['1']} mode="vertical" style={{ height: '100%' }}>
             <Menu.Item key="1">
@@ -13,11 +15,11 @@ const Aside = (props)=>(
                 <span>Option 2</span>
             </Menu.Item>
             <SubMenu key="sub1" title={<span><Icon type="database" /><span>Institucional</span></span>}>
-                <Menu.Item key="2">Carreras</Menu.Item>
-                <Menu.Item key="3">Semestres</Menu.Item>
-                <Menu.Item key="4">Modulos</Menu.Item>
-                <Menu.Item key="5">Alumnos</Menu.Item>
-                <Menu.Item key="6">Profesores</Menu.Item>
+                <Menu.Item key="2"><Link to="/carreras">Carreras</Link></Menu.Item>
+                <Menu.Item key="3"><Link to="/semestres">Semestres</Link></Menu.Item>
+                <Menu.Item key="4"><Link to="/modulos">Modulos</Link></Menu.Item>
+                <Menu.Item key="5"><Link to="/alumnos">Alumnos</Link></Menu.Item>
+                <Menu.Item key="6"><Link to="/profesores">Profesores</Link></Menu.Item>
             </SubMenu>
             <SubMenu key="sub2" title={<span><Icon type="rocket" /><span>Matriculas</span></span>} >
                 <Menu.Item key="7">Ratificacion</Menu.Item>
@@ -47,12 +49,16 @@ const Aside = (props)=>(
                 <Menu.Item key="21">Team 1</Menu.Item> 
                 <Menu.Item key="22">Team 2</Menu.Item>
             </SubMenu>
-            <Menu.Item key="23">
-                <Icon type="file" />
-                <span>File</span>
-            </Menu.Item>
+            <SubMenu key="sub8" title={<span><Icon type="setting" /><span>Configuracion</span></span>} >
+                <Menu.Item key="23"><Link to="instituto">Instituto</Link></Menu.Item> 
+                <Menu.Item key="24"><Link to="general">General</Link></Menu.Item>
+            </SubMenu>
         </Menu>
     </Sider>
 );
+
+Aside.prototype = {
+    collapsed: PropTypes.bool.isRequired
+}
 
 export default Aside;
