@@ -17,7 +17,7 @@ class Instituto extends Component{
                   <Query
                     query={gql`
                     {
-                        Usuario {
+                        Usuarios {
                             usuario
                             clave
                         }
@@ -28,7 +28,7 @@ class Instituto extends Component{
                     if (loading) return <p>Loading...</p>;
                     if (error) return <p>Error :(</p>;
 
-                    return data.Usuario.map(({ usuario, clave }) => (
+                    return data.Usuarios.map(({ usuario, clave }) => (
                         <div key={usuario}>
                         <p>{`${usuario}: ${clave}`}</p>
                         </div>
