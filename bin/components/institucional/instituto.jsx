@@ -14,7 +14,7 @@ class Instituto extends Component{
     render(){
         return (
             <App>
-                  <Query
+                <Query
                     query={gql`
                     {
                         Usuarios {
