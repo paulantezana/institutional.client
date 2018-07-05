@@ -1,0 +1,11 @@
+@import "../helpers/config";
+
+.content {
+  margin: 24px 24px 0;
+}
+
+@include to (sm){
+    .content {
+      margin: 24px 0 0;
+    }
+}

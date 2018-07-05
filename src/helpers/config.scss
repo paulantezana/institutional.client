@@ -1,0 +1,122 @@
+@import "media-queries";
+
+// app breakpoints
+$breakpoints : (
+    xs  : 480px,
+    sm  : 576px,
+    md  : 768px,
+    lg  : 992px,
+    xl  : 1200px
+) !default;
+
+/// Colors
+$black:        hsl(0, 0%, 4%) !default;
+$white:        hsl(0, 0%, 100%) !default;
+$orange:       hsl(14,  100%, 53%) !default;
+$yellow:       hsl(48,  100%, 67%) !default;
+$green:        hsl(141, 71%,  48%) !default;
+$turquoise:    hsl(171, 100%, 41%) !default;
+$cyan:         hsl(204, 86%,  53%) !default;
+$blue:         hsl(217, 71%,  53%) !default;
+$purple:       hsl(271, 100%, 71%) !default;
+$red:          hsl(348, 100%, 61%) !default;
+
+$colors: (
+    color     : (#1B82E7, #FAFAFA),
+    inverse   : (#FFB733, #413710),
+
+    link      : (#3273DC, #FFFFFF),
+    info      : (#209CEE, #FFFFFF),
+    success   : (#23D160, #FFFFFF),
+    warning   : (#ffd739, #413710),
+    alert     : (#FF3860, #FFFFFF),
+) !default;
+
+// App Color shades
+$shades: (
+    black-bis         : hsl(0, 0%, 7%),
+    black-ter         : hsl(0, 0%, 14%),
+    grey-darker       : hsl(0, 0%, 21%),
+    grey-dark         : hsl(0, 0%, 29%),
+    grey              : hsl(0, 0%, 48%),
+    grey-light        : hsl(0, 0%, 71%),
+    grey-lighter      : hsl(0, 0%, 86%),
+    white-ter         : hsl(0, 0%, 96%),
+    white-bis         : hsl(0, 0%, 98%)
+) !default;
+
+
+// // APP font styles
+// $app-font-color                 : shade(grey-dark) !default;
+// $app-font-color-title           : #2C3847;
+// $app-font-color-invert          : findColorInvert($app-font-color) !default;
+// $app-font-color-light           : shade(grey) !default;
+// $app-font-color-strong          : shade(grey-darker) !default;
+
+// $app-font-family                : 'Open Sans' !default;
+// $app-font-family-title          : 'Open Sans' !default;
+// $app-font-size                  : 0.9rem !default;
+
+// $app-font-weight-light          : 300 !default;
+// $app-font-weight                : 400 !default;
+// $app-font-weight-medium         : 500 !default;
+// $app-font-weight-semibold       : 600 !default;
+// $app-font-weight-bold           : 700 !default;
+
+// // APP other styles
+// $app-background         : shade(white-bis) !default;
+// $app-line-height        : 1.6em !default;
+
+// $app-border-color       : shade(grey-lighter);
+// $app-border-color-hover : shade(grey-light);
+
+// // APP link styles
+// $link: $blue !default;
+// $link-invert: findColorInvert($blue) !default;
+// $link-visited: $purple !default;
+
+// $link-hover: shade(grey-darker) !default;
+// $link-hover-border: shade(grey-light) !default;
+
+// $link-focus: shade(grey-darker) !default;
+// $link-focus-border: $blue !default;
+
+// $link-active: shade(grey-darker) !default;
+// $link-active-border: shade(grey-dark) !default;
+
+// // transition and animation
+// $app-easing             : ease-out !default;
+// $app-speed              : 86ms !default;
+
+// // radius
+// $app-radius-small       : 2px !default;
+// $app-radius             : 3px !default;
+// $app-radius-large       : 5px !default;
+// $app-radius-rounded     : 1em !default;
+
+//  color app
+@function color($color, $level: 1){
+    $mapColor: map-merge($colors,$shades);
+
+    @if map-has-key($mapColor, $color){
+        $list: map-get($mapColor, $color);
+        @return nth($list,$level);
+    }
+
+    @else{
+        @return red;
+    }
+}
+
+// color shades grey scale
+@function shade($shade){
+
+    @if map-has-key($shades, $shade){
+        @return map-get($shades, $shade);
+    }
+
+    @else{
+        @return gray;
+    }
+
+}
