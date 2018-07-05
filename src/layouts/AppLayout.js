@@ -62,12 +62,7 @@ enquireScreen(b => {
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-// import Compra from '../routes/Compra';
 import Dashboard from '../routes/Dashboard';
-// import Producto from '../routes/Producto';
-// import Tercero from '../routes/Tercero';
-// import Usuario from '../routes/Usuario';
-// import Venta from '../routes/Venta';
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -144,14 +139,14 @@ class App extends PureComponent{
                     </Header>
 
                     <Content style={{ margin: '24px 24px 0', height: '100%' }}>
-                        <Switch>
+                        {/* <Switch> */}
                             {/* <PrivateRoute exact path='/compra' component={Compra}/> */}
-                            <PrivateRoute exact path='/' component={Dashboard}/>
+                            <Route  path='/' component={Dashboard}/>
                             {/* <PrivateRoute exact path='/producto' component={Producto}/>
                             <PrivateRoute exact path='/tercero' component={Tercero}/>
                             <PrivateRoute exact path='/usuario' component={Usuario}/>
                             <PrivateRoute exact path='/venta' component={Venta}/> */}
-                        </Switch>
+                        {/* </Switch> */}
                     </Content>
 
                     <Footer style={{ padding: 0 }}>
