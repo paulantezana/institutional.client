@@ -1,7 +1,9 @@
 import React, {Component} from "react";
 import { Form, Icon, Input, Button } from 'antd';
 
-import styles from './Login.scss';
+import styles from './User.scss';
+
+import { Link } from "react-router-dom";
 
 function hasErrors(fieldsError) {
     return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -21,13 +23,12 @@ class LoginPage extends Component{
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                this.props.onSubmit(values);
+                
             }
         });
     }
 
     render(){
-        const { showRegister, showRecover } = this.props;
         const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
 
          // Only show error after a field is touched.
@@ -35,7 +36,7 @@ class LoginPage extends Component{
         const claveError = isFieldTouched('clave') && getFieldError('clave');
 
         return(
-            <div className={styles.login}>
+            <div className={styles.form}>
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Item hasFeedback validateStatus={usuarioError ? 'error' : ''} help={usuarioError || ''}>
                         {
@@ -59,8 +60,8 @@ class LoginPage extends Component{
                         <Button type="primary" htmlType="submit" className={styles.submit} disabled={hasErrors(getFieldsError())}>Iniciar Sesión</Button>
                     </Form.Item>
                 </Form>
-                <a className={styles.toggle} href="" onClick={showRegister}>¡Regístrate ahora!</a> 
-                <a className={styles.toggle} href="" onClick={showRecover}>¿Olvidaste tu cuenta?</a>
+                <Link to="/user/register" className={styles.toggle}>¡Regístrate ahora!</Link>
+                <Link to="/user/recover" className={styles.toggle}>¿Olvidaste tu cuenta?</Link>
             </div>
         )
     }

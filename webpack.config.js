@@ -1,3 +1,4 @@
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
@@ -19,8 +20,6 @@ module.exports = {
     },
     devServer: {
         contentBase : path.join(__dirname, 'public'),
-        // do not print bundle build stats
-        noInfo: true,
         // enable HMR
         hot: true,
         // embed the webpack-dev-server runtime into the bundle
@@ -31,7 +30,7 @@ module.exports = {
         // host: HOST,
 
         compress    : true,
-        // port        : 3000,
+        port        : 3001,
         open        : true,
         // stats       : 'errors-only',
     },
@@ -118,6 +117,7 @@ module.exports = {
         }),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoEmitOnErrorsPlugin()
+        new webpack.NoEmitOnErrorsPlugin(),
+        new FaviconsWebpackPlugin('./src/assets/logo.png')
     ]
 };

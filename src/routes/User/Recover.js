@@ -1,7 +1,8 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
 
-import styles from './Recover.scss';
+import styles from './User.scss';
 
 function hasErrors(fieldsError) {
     return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -27,14 +28,13 @@ class RecoverForm extends Component{
     }
 
     render(){
-        const { showLogin } = this.props;
         const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
 
          // Only show error after a field is touched.
         const emailError = isFieldTouched('email') && getFieldError('email');
 
         return(
-            <div className={styles.login}>
+            <div className={styles.form}>
                 <Form onSubmit={this.handleSubmit} className={styles.login}>
                     <Form.Item hasFeedback validateStatus={emailError ? 'error' : ''} help={emailError || ''}>
                         {
@@ -49,7 +49,7 @@ class RecoverForm extends Component{
                         <Button type="primary" htmlType="submit" className={styles.submit} disabled={hasErrors(getFieldsError())}> Recuperar contraseña </Button>
                     </Form.Item>
                 </Form>
-                <a className={styles.toggle} href="" onClick={showLogin}>Iniciar Sesión</a>
+                <Link to="/user" className={styles.toggle}>Iniciar Sesión</Link>
             </div>
         )
     }

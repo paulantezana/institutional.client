@@ -1,13 +1,14 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
 
-import styles from './Register.scss';
+import styles from './User.scss';
 
 const RegisterForm = (props)=>{
     const { onSubmit, showLogin } = props;
     const { getFieldDecorator } = props.form;
     return (
-        <div className={styles.login}>
+        <div className={styles.form}>
             <Form onSubmit={onSubmit} className={styles.login}>
                 {/* <Form.Item>
                     {
@@ -32,7 +33,7 @@ const RegisterForm = (props)=>{
                     <Button type="primary" htmlType="submit" className={styles.submit}>Registrarse</Button>
                 </Form.Item>
             </Form>
-            <a className={styles.toggle} href="" onClick={showLogin}>Iniciar Sesión</a>
+            <Link to="/user" className={styles.toggle}>Iniciar Sesión</Link>
         </div>
     )
 }
