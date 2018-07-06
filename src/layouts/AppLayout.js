@@ -21,12 +21,6 @@ import logo from '../assets/logo.png';
 import { PrivateRoute, Logout, GetUser } from '../helpers/auth';
 import menu from '../common/menu';
 
-const fakeUser = {
-    username: 'GetUser().nombre',
-    avatar: 'GetUser().avatar',
-}
-
-
 import { ContainerQuery }  from 'react-container-query';
 import classNames from 'classnames';
 import { enquireScreen, unenquireScreen } from 'enquire-js';
@@ -71,6 +65,7 @@ class App extends PureComponent{
     constructor(props){
         super(props);
         this.state = {
+            usuario: {},
             collapsed: false,
             isMobile,
         };
@@ -85,6 +80,9 @@ class App extends PureComponent{
               isMobile: mobile,
             });
         });
+        this.setState({
+            usuario: GetUser()
+        })
     }
 
     componentWillUnmount() {

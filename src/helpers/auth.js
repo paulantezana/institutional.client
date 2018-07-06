@@ -13,6 +13,10 @@ const Logout = ()=>{
     localStorage.clear();
 };
 
+const Login = (t)=>{
+    localStorage.setItem('lkti',t);
+}
+
 const PrivateRoute = ({ component: Component, rest }) => (
     <Route
       {...rest}
@@ -37,6 +41,7 @@ const GetUser = ()=>{
 
 export {
     Logout,
+    Login,
     PrivateRoute,
     Authenticate,
     GetUser

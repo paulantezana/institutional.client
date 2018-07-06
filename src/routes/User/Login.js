@@ -1,18 +1,23 @@
 import React, {Component} from "react";
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, notification, message, Tag } from 'antd';
+import { Link } from "react-router-dom";
 
 import styles from './User.scss';
+import request from '../../helpers/request';
+import { Login, GetUser } from '../../helpers/auth';
 
-import { Link } from "react-router-dom";
 
 function hasErrors(fieldsError) {
     return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
 
-class LoginPage extends Component{
+class LoginForm extends Component{
     constructor(props){
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.state = {
+            loading : false
+        }
     }
 
     componentDidMount(){
@@ -21,10 +26,29 @@ class LoginPage extends Component{
 
     handleSubmit(e){
         e.preventDefault();
+        this.setState({ loading: true });
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                
+                request('http://localhost:7070/login', {
+                    method: 'POST',
+                    body: values
+                })
+                    .then(data => {
+                        if(data.success){
+                            Login(data.data.token);
+                            this.props.history.push('/');
+                            message.success('Bienvenido al sistema ' + GetUser().usuario);
+                        }else{
+                            notification.error({
+                                message: "Iniciar sesión",
+                                description: data.errors.map((error,key)=>(
+                                    <Tag key={key} color="red">{error}</Tag>
+                                ))
+                            })
+                        }
+                    })
             }
+            this.setState({loading: false});
         });
     }
 
@@ -57,7 +81,7 @@ class LoginPage extends Component{
                         }
                     </Form.Item>
                     <Form.Item>
-                        <Button type="primary" htmlType="submit" className={styles.submit} disabled={hasErrors(getFieldsError())}>Iniciar Sesión</Button>
+                        <Button type="primary" loading={this.state.loading} htmlType="submit" className={styles.submit} disabled={hasErrors(getFieldsError())}>Iniciar Sesión</Button>
                     </Form.Item>
                 </Form>
                 <Link to="/user/register" className={styles.toggle}>¡Regístrate ahora!</Link>
@@ -67,6 +91,6 @@ class LoginPage extends Component{
     }
 }
 
-const Login = Form.create()(LoginPage)
+const LoginPage = Form.create()(LoginForm)
 
-export default Login;
+export default LoginPage;
