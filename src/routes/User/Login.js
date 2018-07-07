@@ -1,11 +1,10 @@
-import React, {Component} from "react";
-import { Form, Icon, Input, Button, notification, message, Tag } from 'antd';
+import React, { Component } from "react";
+import { Form, Icon, Input, Button } from 'antd';
 import { Link } from "react-router-dom";
+import { connect } from 'react-redux';
 
 import styles from './User.scss';
-import request from '../../helpers/request';
-import { Login, GetUser } from '../../helpers/auth';
-
+import { fetchLogin } from '../../redux/actions/usuario';
 
 function hasErrors(fieldsError) {
     return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -26,29 +25,10 @@ class LoginForm extends Component{
 
     handleSubmit(e){
         e.preventDefault();
-        this.setState({ loading: true });
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                request('http://localhost:7070/login', {
-                    method: 'POST',
-                    body: values
-                })
-                    .then(data => {
-                        if(data.success){
-                            Login(data.data.token);
-                            this.props.history.push('/');
-                            message.success('Bienvenido al sistema ' + GetUser().usuario);
-                        }else{
-                            notification.error({
-                                message: "Iniciar sesión",
-                                description: data.errors.map((error,key)=>(
-                                    <Tag key={key} color="red">{error}</Tag>
-                                ))
-                            })
-                        }
-                    })
+                this.props.fetchLogin(values);
             }
-            this.setState({loading: false});
         });
     }
 
@@ -81,7 +61,7 @@ class LoginForm extends Component{
                         }
                     </Form.Item>
                     <Form.Item>
-                        <Button type="primary" loading={this.state.loading} htmlType="submit" className={styles.submit} disabled={hasErrors(getFieldsError())}>Iniciar Sesión</Button>
+                        <Button type="primary" loading={this.props.usuario.isFetching} htmlType="submit" className={styles.submit} disabled={hasErrors(getFieldsError())}>Iniciar Sesión</Button>
                     </Form.Item>
                 </Form>
                 <Link to="/user/register" className={styles.toggle}>¡Regístrate ahora!</Link>
@@ -93,4 +73,16 @@ class LoginForm extends Component{
 
 const LoginPage = Form.create()(LoginForm)
 
-export default LoginPage;
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchLogin: (values)=> dispatch(fetchLogin(values))
+    }
+}
+
+const mapStateToProps  = state => {
+    return {
+        usuario: state.usuario
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);

@@ -1,4 +1,7 @@
 import { notification } from 'antd';
+import { push } from 'connected-react-router'
+import store from '../index';
+import config from './config';
 
 const codeMessage = {    
     200: 'El servidor devolvió con éxito los datos solicitados. ',
@@ -33,7 +36,7 @@ function checkStatus(response) {
     throw error;
 }
 
-export default (url, options)=>{
+export default (path, options)=>{
     const defaultOptions = {
         // credentials: 'include',
     };
@@ -56,6 +59,8 @@ export default (url, options)=>{
         }
     }
 
+    const url = config.API_PATH + path;
+
     return fetch(url, newOptions)
         .then(checkStatus)
         .then(response => {
@@ -64,28 +69,25 @@ export default (url, options)=>{
             }
             return response.json();
         })
-        // .catch(e => {
-        //     const errortext = codeMessage[e.name] || response.statusText;
-        //     notification.error({
-        //         message: `Error de solicitud ${e.name}: ${response.url}`,
-        //         description: errortext,
-        //     });
-        //     // if (status === 401) {
-        //     //     dispatch({
-        //     //       type: 'login/logout',
-        //     //     });
-        //     //     return;
-        //     // }
-        //     // if (status === 403) {
-        //     //     dispatch(routerRedux.push('/exception/403'));
-        //     //     return;
-        //     // }
-        //     // if (status <= 504 && status >= 500) {
-        //     //     dispatch(routerRedux.push('/exception/500'));
-        //     //     return;
-        //     // }
-        //     // if (status >= 404 && status < 422) {
-        //     //     dispatch(routerRedux.push('/exception/404'));
-        //     // }
-        // });
+        .catch(e => {
+            const { dispatch } = store;
+            const status = e.name;
+            if (status === 401){
+                dispatch({
+                    type: 'login/logout'
+                });
+                return;
+            }else if (status === 403){
+                dispatch(push('/user/exception/403'));
+                return;
+            }else if (status <= 504 && status >= 500) {
+                dispatch(push('/user/exception/500'));
+                return;
+            }else if (status >= 404 && status < 422){
+                dispatch(push('/user/exception/404'));
+                return;
+            }else{
+                dispatch(push('/user/exception/404'));
+            }
+        })
 }

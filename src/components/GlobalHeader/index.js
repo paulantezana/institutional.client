@@ -60,11 +60,11 @@ class GlobalHeader extends PureComponent {
                             <Icon type="bell" />
                         </Badge>
                     </span>
-                    { currentUser.username ? (
+                    { currentUser.usuario ? (
                         <Dropdown overlay={menu}>
                             <span className={`${styles.action} ${styles.account}`}>
                                 <Avatar size="small" className={styles.avatar} src={currentUser.avatar} />
-                                <span className={styles.name}>{currentUser.username}</span>
+                                <span className={styles.name}>{currentUser.usuario}</span>
                             </span>
                         </Dropdown>
                     ) : (

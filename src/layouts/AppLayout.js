@@ -1,7 +1,9 @@
-import React, { PureComponent } from "react";
-import { Layout } from 'antd';
+import React, { Component } from "react";
+import { Layout, message } from 'antd';
 const { Header, Content, Footer } = Layout;
-
+import { connect } from "react-redux";
+import decoder from 'jwt-decode';
+import { reloadLogin } from '../redux/actions/usuario';
 
 import {
     BrowserRouter as Router,
@@ -59,13 +61,13 @@ enquireScreen(b => {
 import Dashboard from '../routes/Dashboard';
 
 
+
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-class App extends PureComponent{
+class App extends Component{
     constructor(props){
         super(props);
         this.state = {
-            usuario: {},
             collapsed: false,
             isMobile,
         };
@@ -80,11 +82,9 @@ class App extends PureComponent{
               isMobile: mobile,
             });
         });
-        this.setState({
-            usuario: GetUser()
-        })
+        this.props.reloadLogin();
     }
-
+    
     componentWillUnmount() {
         unenquireScreen(this.enquireHandler);
     }
@@ -112,6 +112,7 @@ class App extends PureComponent{
 
     render(){
         const { isMobile: mb } = this.state;
+        const currentUser = this.props.usuario.data.token ? decoder(this.props.usuario.data.token) : {};
         const layout = (
             <Layout>
                 <SiderMenu
@@ -120,7 +121,7 @@ class App extends PureComponent{
                     // Authorized={Authorized}
                     menuData={menu}
                     collapsed={this.state.collapsed}
-                    // location={location}
+                    // location={this.props.usuario}
                     isMobile={mb}
                     onCollapse={this.handleMenuCollapse}
                 />
@@ -128,7 +129,7 @@ class App extends PureComponent{
                     <Header style={{ padding: 0 }}>
                         <GlobalHeader
                             logo={logo}
-                            currentUser={fakeUser}
+                            currentUser={currentUser.usuario}
                             collapsed={this.setState.collapsed}
                             isMobile={mb}
                             onMenuClick={this.handleMenuClick}
@@ -183,4 +184,16 @@ class App extends PureComponent{
     }
 }
 
-export default App;
+const mapDispatchToProps = dispatch => {
+    return {
+        reloadLogin: ()=> dispatch(reloadLogin())
+    }
+}
+
+const mapStateToProps  = state => {
+    return {
+        usuario: state.usuario
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
