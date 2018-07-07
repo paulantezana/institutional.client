@@ -10,7 +10,6 @@ import GlobalFooter from '../components/GlobalFooter';
 import Login from '../routes/User/Login';
 import Register from '../routes/User/Register';
 import Recover from '../routes/User/Recover';
-import RecoverConfirm from '../routes/User/RecoverConfirm';
 import NotFound from '../routes/Exception/404';
 // //////////////////////////////////////////////////////////////
 
@@ -43,7 +42,6 @@ class UserLayout extends PureComponent{
                         <Route exact path={match.url} component={Login}/>
                         <Route exact path={`${match.url}/register`} component={Register}/>
                         <Route exact path={`${match.url}/recover`} component={Recover}/>
-                        <Route exact path={`${match.url}/recover/confirm/:id`} component={RecoverConfirm}/>
                         <Route component={NotFound}/>
                     </Switch>
                 </div>

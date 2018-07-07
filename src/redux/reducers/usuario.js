@@ -24,7 +24,7 @@ const usuario = (state = initialState, action) =>{
             return{
                 ...state,
                 isFetching: false,
-                errors: ['Error']
+                errors: []
             }
         default:
             return state

@@ -76,18 +76,19 @@ export default (path, options)=>{
                 dispatch({
                     type: 'login/logout'
                 });
-                return;
+                return e;
             }else if (status === 403){
                 dispatch(push('/user/exception/403'));
-                return;
+                return e;
             }else if (status <= 504 && status >= 500) {
                 dispatch(push('/user/exception/500'));
-                return;
+                return e;
             }else if (status >= 404 && status < 422){
                 dispatch(push('/user/exception/404'));
-                return;
-            }else{
-                dispatch(push('/user/exception/404'));
+                return e;
             }
+
+            dispatch(push('/user/exception/404'));
+            return e
         })
 }

@@ -43,6 +43,9 @@ export const fetchLogin = values =>{
                     dispatch(getLoginFailure());
                 }
             })
+            .catch(err=>{
+                dispatch(getLoginFailure())
+            })
     }
 }
 
