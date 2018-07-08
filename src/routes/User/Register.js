@@ -140,7 +140,7 @@ class RegisterPage extends Component{
                         </Form.Item>
     
                         <Form.Item>
-                        <Button type="primary" loading={this.state.loading} htmlType="submit" className={styles.submit} disabled={hasErrors(getFieldsError())}>Iniciar Sesión</Button>
+                            <Button type="primary" loading={this.state.loading} htmlType="submit" className={styles.submit} disabled={hasErrors(getFieldsError())}>Registrate</Button>
                         </Form.Item>
                     </Form>
                     <Link to="/user" className={styles.toggle}>Iniciar Sesión</Link>
