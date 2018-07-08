@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { Form, Icon, Input, Button, Alert, Card } from 'antd';
+import { Link } from "react-router-dom";
 
 import styles from './Forgout.scss';
 import request from "./../../../helpers/request";
+
 
 function hasErrors(fieldsError) {
     return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -60,7 +62,7 @@ class ValidateForm extends Component{
         const claveRecuperarError = isFieldTouched('clave_recuperar') && getFieldError('clave_recuperar');
 
         return(
-            <Card title="Ingresa el código de seguridad">
+            <Card title="Ingresa el código de seguridad" className={styles.container} bordered={false}>
                 <p>Comprueba si recibiste un correo electrónico con tu código, que debe tener siete dígitos.</p>
                 {
                     (this.state.errors.length == true) && <Alert message={
@@ -81,6 +83,7 @@ class ValidateForm extends Component{
                         <Button type="primary" htmlType="submit" loading={this.state.loading} className={styles.submit} disabled={hasErrors(getFieldsError())}>Continuar</Button>
                     </Form.Item>
                 </Form>
+                <Link to="/user" className={styles.toggle}>Iniciar Sesión</Link>
             </Card>
         )
     }

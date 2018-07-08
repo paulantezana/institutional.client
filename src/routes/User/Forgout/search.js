@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Form, Icon, Input, Button, Alert, Card } from 'antd';
-import request from '../../../helpers/request';
+import { Link } from "react-router-dom";
 
+import request from '../../../helpers/request';
 import styles from './Forgout.scss';
 
 function hasErrors(fieldsError) {
@@ -56,7 +57,7 @@ class SearchForm extends Component{
         const correoError = isFieldTouched('correo') && getFieldError('correo');
 
         return(
-            <Card title="Recupera tu contraseña"  className={styles.container}>
+            <Card title="Recupera tu contraseña"  className={styles.container} bordered={false}>
                 {
                     (this.state.errors.length == true) && <Alert message={
                         this.state.errors.map((err,key)=><span key={key}>{err}<br/></span>)
@@ -76,6 +77,7 @@ class SearchForm extends Component{
                         <Button type="primary" htmlType="submit" loading={this.state.loading} className={styles.submit} disabled={hasErrors(getFieldsError())}>Buscar</Button>
                     </Form.Item>
                 </Form>
+                <Link to="/user" className={styles.toggle}>Iniciar Sesión</Link>
             </Card>
         )
     }

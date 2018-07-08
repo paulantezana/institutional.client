@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Form, Icon, Input, Button, Alert, Card } from 'antd';
+import { Form, Icon, Input, Button, Alert, Card, Divider } from 'antd';
+import { Link } from "react-router-dom";
 
 import styles from './Forgout.scss';
 import request from "./../../../helpers/request";
@@ -79,42 +80,53 @@ class ChangeForm extends Component{
         const claveError = isFieldTouched('clave') && getFieldError('clave');
         const confirmarClaveError = isFieldTouched('confirmar_clave') && getFieldError('confirmar_clave');
 
-        return(
-            <Card title="Cambiar contraseña">
-                {
-                    (this.state.errors.length == true) && <Alert message={
-                        this.state.errors.map((err,key)=><span key={key}>{err}<br/></span>)
-                    } type="error" showIcon/>
-                }
-                <Form onSubmit={this.handleSubmit} className={styles.login}>
-                    <Form.Item hasFeedback validateStatus={claveError ? 'error' : ''} help={claveError || ''}>
-                        {
-                            getFieldDecorator('clave', {
-                                rules: [
-                                    { required: true, message: 'Por favor ingrese su contraseña!' },
-                                    { validator: this.validateToNextPassword}],
-                            })(
-                                <Input type="password" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Contraseña"/>
-                            )
-                        }
-                    </Form.Item>
-                    <Form.Item hasFeedback validateStatus={confirmarClaveError ? 'error' : ''} help={confirmarClaveError || ''}>
-                        {
-                            getFieldDecorator('confirmar_clave', {
-                                rules: [
-                                    { required: true, message: '¡Por favor, confirme su contraseña!' },
-                                    { validator: this.compareToFirstPassword}],
-                            })(
-                                <Input type="password" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Repetir Contraseña"/>
-                            )
-                        }
-                    </Form.Item>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit" loading={this.state.loading} className={styles.submit} disabled={hasErrors(getFieldsError())}> Recuperar contraseña </Button>
-                    </Form.Item>
-                </Form>
-            </Card>
-        )
+        if(this.state.success){
+            return (
+                <Card title="Cambiar contraseña" className={styles.container} bordered={false}>
+                    <Alert message="La contraseña se cambio exitosamente" type="success" showIcon/>
+                    <Divider/>
+                    <Link to="/user" className={styles.toggle}>Iniciar Sesión</Link>
+                </Card>
+            )
+        }else{
+            return(
+                <Card title="Cambiar contraseña" className={styles.container} bordered={false}>
+                    {
+                        (this.state.errors.length == true) && <Alert message={
+                            this.state.errors.map((err,key)=><span key={key}>{err}<br/></span>)
+                        } type="error" showIcon/>
+                    }
+                    <Form onSubmit={this.handleSubmit} className={styles.login}>
+                        <Form.Item hasFeedback validateStatus={claveError ? 'error' : ''} help={claveError || ''}>
+                            {
+                                getFieldDecorator('clave', {
+                                    rules: [
+                                        { required: true, message: 'Por favor ingrese su contraseña!' },
+                                        { validator: this.validateToNextPassword}],
+                                })(
+                                    <Input type="password" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Contraseña"/>
+                                )
+                            }
+                        </Form.Item>
+                        <Form.Item hasFeedback validateStatus={confirmarClaveError ? 'error' : ''} help={confirmarClaveError || ''}>
+                            {
+                                getFieldDecorator('confirmar_clave', {
+                                    rules: [
+                                        { required: true, message: '¡Por favor, confirme su contraseña!' },
+                                        { validator: this.compareToFirstPassword}],
+                                })(
+                                    <Input type="password" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Repetir Contraseña"/>
+                                )
+                            }
+                        </Form.Item>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit" loading={this.state.loading} className={styles.submit} disabled={hasErrors(getFieldsError())}> Recuperar contraseña </Button>
+                        </Form.Item>
+                    </Form>
+                    <Link to="/user" className={styles.toggle}>Iniciar Sesión</Link>
+                </Card>
+            )
+        }
     }
 }
 
