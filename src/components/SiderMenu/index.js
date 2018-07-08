@@ -19,7 +19,7 @@ const Aside = ({collapsed, onCollapse, onMenuClick, menuData, logo})=>(
         <div className={styles.logo} key="logo">
             <Link to="/">
                 <img src={logo} alt="logo" />
-                <h1>Facturacion</h1>
+                <h1>Vilcanota</h1>
             </Link>
         </div>
         <Menu 

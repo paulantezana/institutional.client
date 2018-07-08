@@ -11,3 +11,13 @@
         margin-bottom: 1em;
     }
 }
+
+.container {
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    background: none;
+    .submit {
+        width: 100%;
+    }
+}
