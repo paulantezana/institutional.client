@@ -34,12 +34,15 @@ class Alumno extends PureComponent{
             sortedInfo: null,
             visibleModal: false,
         }
+        // this.formRef;
 
         this.handleChange = this.handleChange.bind(this);
         this.showModal = this.showModal.bind(this);
 
         this.handleCreate = this.handleCreate.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
+
+        // this.saveFormRef = this.saveFormRef.bind(this);
     }
 
     handleCancel(){
@@ -47,10 +50,16 @@ class Alumno extends PureComponent{
     }
 
     handleCreate(){
-        // const form = this.formRef.props.form;
-        // form.validateFields((err, values) => {
-        //     console.log('Received values of form: ', values);
-        // });
+        const form = this.formRef.props.form;
+        form.validateFields((err, values) => {
+            if (err) {
+              return;
+            }
+      
+            console.log('Received values of form: ', values);
+            form.resetFields();
+            this.setState({ visible: false });
+        });
     }
 
     showModal(){
@@ -63,10 +72,6 @@ class Alumno extends PureComponent{
             sortedInfo: sorter,
         });
     }
-
-    // saveFormRef(formRef){
-    //     this.formRef = formRef;
-    // }
 
     render(){
         let { sortedInfo, filteredInfo } = this.state;
@@ -127,7 +132,7 @@ class Alumno extends PureComponent{
                         <Button type="primary"><Icon type="export"/>Exportar</Button>
                         <Button type="primary"><Icon type="folder"/>Importar</Button>
                         <NuevoForm 
-                            // wrappedComponentRef={this.saveFormRef}
+                            wrappedComponentRef={(formRef) => this.formRef = formRef}
                             visible={this.state.visible}
                             onCancel={this.handleCancel}
                             onCreate={this.handleCreate}/>
