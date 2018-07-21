@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 
 import gql from "graphql-tag";
-import { Query } from "react-apollo";
+import { Query, Mutation } from "react-apollo";
 
 import { Table, Card, Button, Icon, Divider, Avatar, Modal, Form, Spin, Alert } from 'antd';
 
@@ -26,6 +26,14 @@ const GET_ALUMNOS = gql`{
     }
 }`;
 
+const CREATE_ALUMNO = gql`
+    mutation CreateAlumno($dni: String!, $nombres: String!, $apellido_paterno: String!, $apellido_materno: String!, $direccion: String, $celular: String, $pais: String, $sexo: String, $telefono: String, $fecha_nacimiento: DateTime, $departamento: String, $estado_civil: String){
+        CreateAlumno(dni: $dni, nombres: $nombres, apellido_paterno: $apellido_paterno, apellido_materno: $apellido_materno, direccion: $direccion, celular: $celular, pais: $pais, sexo: $sexo, telefono: $telefono, fecha_nacimiento: $fecha_nacimiento, departamento: $departamento, estado_civil: $estado_civil){
+            id
+        }
+    }
+`;
+
 class Alumno extends PureComponent{
     constructor(props){
         super(props)
@@ -34,15 +42,11 @@ class Alumno extends PureComponent{
             sortedInfo: null,
             visibleModal: false,
         }
-        // this.formRef;
-
         this.handleChange = this.handleChange.bind(this);
         this.showModal = this.showModal.bind(this);
 
         this.handleCreate = this.handleCreate.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
-
-        // this.saveFormRef = this.saveFormRef.bind(this);
     }
 
     handleCancel(){
@@ -56,7 +60,7 @@ class Alumno extends PureComponent{
               return;
             }
       
-            console.log('Received values of form: ', values);
+            // console.log('Received values of form: ', values);
             form.resetFields();
             this.setState({ visible: false });
         });
@@ -131,15 +135,34 @@ class Alumno extends PureComponent{
                         <Button type="primary"><Icon type="idcard"/>Carnet</Button>
                         <Button type="primary"><Icon type="export"/>Exportar</Button>
                         <Button type="primary"><Icon type="folder"/>Importar</Button>
-                        <NuevoForm 
-                            wrappedComponentRef={(formRef) => this.formRef = formRef}
-                            visible={this.state.visible}
-                            onCancel={this.handleCancel}
-                            onCreate={this.handleCreate}/>
+                        <Mutation mutation={CREATE_ALUMNO}>
+                            {(addTodo, { loading, error, data }) => {
+                                if (loading) return <Spin/>;
+                                if (error) return <Alert type="error" message={`Error! ${error.message}`} banner />;
+                                return (
+                                    <NuevoForm
+                                        wrappedComponentRef={(formRef) => this.formRef = formRef}
+                                        visible={this.state.visible}
+                                        onCancel={this.handleCancel}
+                                        onCreate={()=>{
+                                            const form = this.formRef.props.form;
+                                            form.validateFields((err, values) => {
+                                                console.log(values);
+                                                if (err) {
+                                                    return;
+                                                }
+                                                addTodo({ variables: values });
+                                                form.resetFields();
+                                                // this.setState({ visible: false });
+                                            });
+                                        }
+                                    }/>
+                                )
+                            }}
+                        </Mutation>
                     </div>
                     <Query query={GET_ALUMNOS}>
                         {({ loading, error, data }) => {
-                            console.log(data);
                             if (loading) return <Spin/>;
                             if (error) return <Alert type="error" message={`Error! ${error.message}`} banner />;
                             return (
