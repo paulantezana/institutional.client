@@ -1,4 +1,7 @@
 import React, { PureComponent } from 'react';
+import { Table, Card, Button, Icon, Divider, Avatar, Modal, Form, Spin, Alert } from 'antd';
+
+import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
 class Dashboard extends PureComponent{
     constructor(props){

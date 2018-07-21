@@ -59,6 +59,9 @@ enquireScreen(b => {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 import Dashboard from '../routes/Dashboard';
+import Alumno from '../routes/Alumno';
+import Profesor from '../routes/Profesor';
+import Personal from '../routes/Personal';
 
 
 
@@ -112,6 +115,7 @@ class App extends Component{
 
     render(){
         const { isMobile: mb } = this.state;
+        const { match } = this.props;
         const currentUser = this.props.usuario.data.token ? decoder(this.props.usuario.data.token) : {};
         const layout = (
             <Layout>
@@ -138,14 +142,12 @@ class App extends Component{
                     </Header>
 
                     <Content style={{ margin: '24px 24px 0', height: '100%' }}>
-                        {/* <Switch> */}
-                            {/* <PrivateRoute exact path='/compra' component={Compra}/> */}
-                            <Route  path='/' component={Dashboard}/>
-                            {/* <PrivateRoute exact path='/producto' component={Producto}/>
-                            <PrivateRoute exact path='/tercero' component={Tercero}/>
-                            <PrivateRoute exact path='/usuario' component={Usuario}/>
-                            <PrivateRoute exact path='/venta' component={Venta}/> */}
-                        {/* </Switch> */}
+                        <Switch>
+                            <Route exact path={`${match.url}`} component={Dashboard}/>
+                            <Route exact path={`${match.url}profesor`} component={Profesor}/>
+                            <Route exact path={`${match.url}alumno`} component={Alumno}/>
+                            <Route exact path={`${match.url}personal`} component={Personal}/>
+                        </Switch>
                     </Content>
 
                     <Footer style={{ padding: 0 }}>

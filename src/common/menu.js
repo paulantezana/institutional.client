@@ -24,6 +24,24 @@ const menu = [
         path: '/carrera',
     },
     {
+        id: 'profesor',
+        name: 'Profesores',
+        icon: 'user',
+        path: '/profesor',
+    },
+    {
+        id: 'alumno',
+        name: 'Alumnos',
+        icon: 'user',
+        path: '/alumno',
+    },
+    {
+        id: 'personal',
+        name: 'Personales',
+        icon: 'user',
+        path: '/personal',
+    },
+    {
         id: 'Perfil',
         name: 'perfil',
         icon: 'appstore-o',
