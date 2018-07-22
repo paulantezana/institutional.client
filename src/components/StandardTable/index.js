@@ -50,6 +50,7 @@ class StandardTable extends PureComponent {
                     // rowSelection={rowSelection}
                     dataSource={dataSource}
                     columns={columns}
+                    size="small"
                     // pagination={paginationProps}
                     onChange={this.handleTableChange}
                 />

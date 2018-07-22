@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import gql from "graphql-tag";
 import { Query, Mutation } from "react-apollo";
 
-import { Table, Card, Button, Icon, Divider, Avatar, Modal, Form, Spin, Alert } from 'antd';
+import { Menu, Card, Button, Icon, Divider, Dropdown, Modal, Avatar, Spin, message, Alert } from 'antd';
 
 import StandardTable from '../../components/StandardTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
@@ -15,20 +15,28 @@ import NuevoForm from './nuevo';
 
 const GET_ALUMNOS = gql`{
     Alumnos{
-        apellido_materno
-        apellido_paterno
-        celular
-        dni
-        estado
         id
+        dni
         nombres
+        apellido_paterno
+        apellido_materno
         sexo
+        estado
+        celular
     }
 }`;
 
 const CREATE_ALUMNO = gql`
     mutation CreateAlumno($dni: String!, $nombres: String!, $apellido_paterno: String!, $apellido_materno: String!, $direccion: String, $celular: String, $pais: String, $sexo: String, $telefono: String, $fecha_nacimiento: DateTime, $departamento: String, $estado_civil: String){
         CreateAlumno(dni: $dni, nombres: $nombres, apellido_paterno: $apellido_paterno, apellido_materno: $apellido_materno, direccion: $direccion, celular: $celular, pais: $pais, sexo: $sexo, telefono: $telefono, fecha_nacimiento: $fecha_nacimiento, departamento: $departamento, estado_civil: $estado_civil){
+            id
+        }
+    }
+`;
+
+const DELETE_ALUMNO = gql`
+    mutation DeleteAlumno($id: Int!){
+        DeleteAlumno(id: $id){
             id
         }
     }
@@ -44,6 +52,7 @@ class Alumno extends PureComponent{
         }
         this.handleChange = this.handleChange.bind(this);
         this.showModal = this.showModal.bind(this);
+        this.hideModal = this.hideModal.bind(this);
 
         this.handleCreate = this.handleCreate.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
@@ -68,6 +77,10 @@ class Alumno extends PureComponent{
 
     showModal(){
         this.setState({ visible: true });
+    }
+
+    hideModal(){
+        this.setState({ visible: false });
     }
 
     handleChange(pagination, filters, sorter){
@@ -125,6 +138,31 @@ class Alumno extends PureComponent{
                 sorter: (a, b) => a.celular.length - b.celular.length,
                 sortOrder: sortedInfo.columnKey === 'celular' && sortedInfo.order,
             },
+            {
+                title: 'Accion',
+                key: 'accion',
+                render: (a, record)=>{
+                    const actionMenu = (
+                        <Menu>
+                            <Menu.Item key="0">Editar</Menu.Item>
+                            {/* <Mutation mutation={DELETE_ALUMNO}>
+                                {(DeleteAlumno, { loading, error, data })=>(
+                                    <Menu.Item key="1">Eliminar</Menu.Item>
+                                )}
+                            </Mutation> */}
+                            <Menu.Item key="2">Anular</Menu.Item>
+                            <Menu.Item key="3">Matricular</Menu.Item>
+                            <Menu.Item key="4">Carnet</Menu.Item>
+                            <Menu.Item key="5">CV</Menu.Item>
+                        </Menu>
+                    )
+                    return(
+                        <Dropdown.Button overlay={actionMenu}>
+                            Editar
+                        </Dropdown.Button>
+                    )
+                }
+            },
         ];
 
         return(
@@ -136,13 +174,14 @@ class Alumno extends PureComponent{
                         <Button type="primary"><Icon type="export"/>Exportar</Button>
                         <Button type="primary"><Icon type="folder"/>Importar</Button>
                         <Mutation mutation={CREATE_ALUMNO}>
-                            {(addTodo, { loading, error, data }) => {
+                            {(CreateAlumno, { loading, error, data }) => {
                                 if (loading) return <Spin/>;
-                                if (error) return <Alert type="error" message={`Error! ${error.message}`} banner />;
+                                if (error) return (message.error(error.message));
                                 return (
                                     <NuevoForm
                                         wrappedComponentRef={(formRef) => this.formRef = formRef}
                                         visible={this.state.visible}
+                                        loading={loading}
                                         onCancel={this.handleCancel}
                                         onCreate={()=>{
                                             const form = this.formRef.props.form;
@@ -151,9 +190,11 @@ class Alumno extends PureComponent{
                                                 if (err) {
                                                     return;
                                                 }
-                                                addTodo({ variables: values });
+                                                CreateAlumno({ variables: values });
                                                 form.resetFields();
-                                                // this.setState({ visible: false });
+                                                // if(!error){
+                                                //     this.hideModal();
+                                                // }
                                             });
                                         }
                                     }/>

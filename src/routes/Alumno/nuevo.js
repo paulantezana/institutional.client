@@ -21,6 +21,7 @@ const NuevoCreateForm = Form.create()(
                 <Modal 
                     title="Nuevo Alumno"
                     okText="Guardar"
+                    loading={this.props.loading}
                     onCancel={onCancel}
                     onOk={onCreate}
                     visible={visible}>
