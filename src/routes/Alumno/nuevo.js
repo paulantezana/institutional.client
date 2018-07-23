@@ -25,6 +25,10 @@ const NuevoCreateForm = Form.create()(
                     onCancel={onCancel}
                     onOk={onCreate}
                     visible={visible}>
+                    <Alert
+                        message = "new schema"
+                        type="error"
+                        showIcon/>
                     <Form layout="horizontal">
                         <Form.Item {...formItemLayout} label="DNI">
                             {getFieldDecorator('dni', {

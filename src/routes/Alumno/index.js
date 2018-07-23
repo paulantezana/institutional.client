@@ -49,6 +49,8 @@ class Alumno extends PureComponent{
             filteredInfo: null,
             sortedInfo: null,
             visibleModal: false,
+            
+            selectedRowKeys: [],
         }
         this.handleChange = this.handleChange.bind(this);
         this.showModal = this.showModal.bind(this);
@@ -56,6 +58,8 @@ class Alumno extends PureComponent{
 
         this.handleCreate = this.handleCreate.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
+
+        this.onSelectChange = this.onSelectChange.bind(this);
     }
 
     handleCancel(){
@@ -90,6 +94,10 @@ class Alumno extends PureComponent{
         });
     }
 
+    onSelectChange(selectedRowKeys){
+        this.setState({ selectedRowKeys });
+    }
+
     render(){
         let { sortedInfo, filteredInfo } = this.state;
         sortedInfo = sortedInfo || {};
@@ -111,22 +119,21 @@ class Alumno extends PureComponent{
                 sortOrder: sortedInfo.columnKey === 'nombres' && sortedInfo.order,
             },
             {
-                title: 'Apellido Paterno',
-                dataIndex: 'apellido_paterno',
-                key: 'apellido_paterno',
+                title: 'Apellidos',
+                key: 'apellidos',
+                render: (a, b)=>{
+                    return `${a.apellido_paterno} ${a.apellido_materno}`
+                },
                 sorter: (a, b) => a.apellido_paterno.length - b.apellido_paterno.length,
                 sortOrder: sortedInfo.columnKey === 'apellido_paterno' && sortedInfo.order,
             },
             {
-                title: 'Apellido Materno',
-                dataIndex: 'apellido_materno',
-                key: 'apellido_materno',
-                sorter: (a, b) => a.apellido_materno.length - b.apellido_materno.length,
-                sortOrder: sortedInfo.columnKey === 'apellido_materno' && sortedInfo.order,
-            },
-            {
                 title: 'Sexo',
                 dataIndex: 'sexo',
+                filters: [
+                    { text: 'Masculino', value: 'M' },
+                    { text: 'Femenino', value: 'F' },
+                ],
                 key: 'sexo',
                 sorter: (a, b) => a.sexo.length - b.sexo.length,
                 sortOrder: sortedInfo.columnKey === 'sexo' && sortedInfo.order,
@@ -163,8 +170,7 @@ class Alumno extends PureComponent{
                                     )}
                                 </Mutation>
                             </Menu.Item>
-                            <Menu.Item key="2">Matricular</Menu.Item>
-                            <Menu.Item key="3">CV</Menu.Item>
+                            <Menu.Item key="2">Detalles</Menu.Item>
                         </Menu>
                     )
                     return(
@@ -175,6 +181,12 @@ class Alumno extends PureComponent{
                 }
             },
         ];
+
+
+        const rowSelection = {
+            selectedRowKeys: this.state.selectedRowKeys,
+            onChange: this.onSelectChange,
+        };
 
         return(
             <PageHeaderLayout>
@@ -215,12 +227,12 @@ class Alumno extends PureComponent{
                     </div>
                     <Query query={GET_ALUMNOS}>
                         {({ loading, error, data }) => {
-                            if (loading) return <Spin/>;
                             if (error) return <Alert type="error" message={`Error! ${error.message}`} banner />;
                             return (
                                 <StandardTable
                                     dataSource={data.Alumnos} 
                                     columns={columns}
+                                    rowSelection={rowSelection}
                                     rowKey={ record => record.id } 
                                     onChange={this.handleChange}
                                     loading={loading}/>
