@@ -143,17 +143,28 @@ class Alumno extends PureComponent{
                 key: 'accion',
                 render: (a, record)=>{
                     const actionMenu = (
-                        <Menu>
+                        <Menu className={styles.action__menu}>
                             <Menu.Item key="0">Editar</Menu.Item>
-                            {/* <Mutation mutation={DELETE_ALUMNO}>
-                                {(DeleteAlumno, { loading, error, data })=>(
-                                    <Menu.Item key="1">Eliminar</Menu.Item>
-                                )}
-                            </Mutation> */}
-                            <Menu.Item key="2">Anular</Menu.Item>
-                            <Menu.Item key="3">Matricular</Menu.Item>
-                            <Menu.Item key="4">Carnet</Menu.Item>
-                            <Menu.Item key="5">CV</Menu.Item>
+                            <Menu.Item key="1">
+                                <Mutation mutation={DELETE_ALUMNO}>
+                                    {(DeleteAlumno, { loading, error, data })=>(
+                                        <div onClick={()=>{
+                                            Modal.confirm({
+                                                title: "¿Estás seguro de eliminar este registro?",
+                                                content: a.nombres,
+                                                okText: "SI",
+                                                okType: 'danger',
+                                                cancelText: "NO",
+                                                onOk(){
+                                                    DeleteAlumno({ variables: {id: a.id} });
+                                                }
+                                            })
+                                        }}>Eliminar</div>
+                                    )}
+                                </Mutation>
+                            </Menu.Item>
+                            <Menu.Item key="2">Matricular</Menu.Item>
+                            <Menu.Item key="3">CV</Menu.Item>
                         </Menu>
                     )
                     return(
