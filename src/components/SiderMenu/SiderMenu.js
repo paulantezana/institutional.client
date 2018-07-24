@@ -10,7 +10,7 @@ const { Sider } = Layout;
         
 const Aside = ({collapsed, onCollapse, onMenuClick, menuData, logo})=>(
     <Sider 
-        collapsible
+        // collapsible
         collapsed={collapsed}
         breakpoint="md"
         onCollapse={onCollapse}

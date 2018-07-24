@@ -83,6 +83,7 @@ class App extends Component{
         this.enquireHandler = enquireScreen(mobile => {
             this.setState({
               isMobile: mobile,
+              collapsed: true,
             });
         });
         this.props.reloadLogin();
@@ -130,7 +131,7 @@ class App extends Component{
                     onCollapse={this.handleMenuCollapse}
                 />
                 <Layout>
-                    <Header style={{ padding: 0 }}>
+                    <Header style={{ padding: 0, height: "50px", lineHeight: "50px"}}>
                         <GlobalHeader
                             logo={logo}
                             currentUser={currentUser.usuario}
@@ -141,7 +142,7 @@ class App extends Component{
                         />
                     </Header>
 
-                    <Content style={{ margin: '24px 24px 0', height: '100%' }}>
+                    <Content>
                         <Switch>
                             <Route exact path={`${match.url}`} component={Dashboard}/>
                             <Route exact path={`${match.url}profesor`} component={Profesor}/>

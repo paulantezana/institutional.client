@@ -197,7 +197,7 @@ class Alumno extends PureComponent{
 
         return(
             <PageHeaderLayout>
-                <Card>
+                <Card bordered={false}>
                     <Row gutter={16}>
                         <Col span={18}>
                             <div className={styles.tableListOperator}>

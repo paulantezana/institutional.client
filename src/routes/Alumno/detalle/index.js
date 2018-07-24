@@ -35,17 +35,24 @@ class Detalle extends PureComponent{
         const { id } = this.props;
         return (
             <div>
-                <span>{id}</span>
                 <Query query={GET_ALUMNOID} variables={{ id }}>
                     {({ loading, error, data }) => {
                         if (error) return <Alert type="error" message={`Error! ${error.message}`} banner />;
                         return (
-                            <ul>
+
+                            <div>
                                 {
-                                    data.AlumnoID && 
-                                    <li>{data.AlumnoID.nombres}</li>
+                                    data.AlumnoID &&
+                                    <div>
+                                        <img src={data.AlumnoID.avatar} alt="avatar"/> 
+                                        <ul>
+                                            <li>Nombres: {data.AlumnoID.nombres}</li>
+                                            <li>Apellidos: {`${data.AlumnoID.apellido_paterno} ${data.AlumnoID.apellido_materno}`}</li>
+                                            <li>Edad: {data.AlumnoID.fecha_nacimiento}</li>
+                                        </ul>
+                                    </div>
                                 }
-                            </ul>
+                            </div>
                         );
                     }}
                 </Query>
