@@ -4,6 +4,7 @@ import gql from "graphql-tag";
 import { Query, Mutation } from "react-apollo";
 
 import { Menu, Card, Button, Icon, Divider, Dropdown, Modal, Avatar, Spin, message, Alert } from 'antd';
+import { Row, Col } from 'antd';
 
 import StandardTable from '../../components/StandardTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
@@ -11,6 +12,7 @@ import styles from './index.scss';
 
 //////////////////////////////////////////////////////////
 import NuevoForm from './nuevo';
+import Datalle from './detalle';
 //////////////////////////////////////////////////////////
 
 const GET_ALUMNOS = gql`{
@@ -49,6 +51,9 @@ class Alumno extends PureComponent{
             filteredInfo: null,
             sortedInfo: null,
             visibleModal: false,
+
+            detalleID: 0,
+            selectedRowKeys: [],
         }
         this.handleChange = this.handleChange.bind(this);
         this.showModal = this.showModal.bind(this);
@@ -56,6 +61,10 @@ class Alumno extends PureComponent{
 
         this.handleCreate = this.handleCreate.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
+
+        this.onSelectChange = this.onSelectChange.bind(this);
+
+        this.handleDetalle = this.handleDetalle.bind(this);
     }
 
     handleCancel(){
@@ -90,6 +99,14 @@ class Alumno extends PureComponent{
         });
     }
 
+    onSelectChange(selectedRowKeys){
+        this.setState({ selectedRowKeys });
+    }
+
+    handleDetalle(detalleID){
+        this.setState({detalleID});
+    }
+
     render(){
         let { sortedInfo, filteredInfo } = this.state;
         sortedInfo = sortedInfo || {};
@@ -111,22 +128,21 @@ class Alumno extends PureComponent{
                 sortOrder: sortedInfo.columnKey === 'nombres' && sortedInfo.order,
             },
             {
-                title: 'Apellido Paterno',
-                dataIndex: 'apellido_paterno',
-                key: 'apellido_paterno',
+                title: 'Apellidos',
+                key: 'apellidos',
+                render: (a, b)=>{
+                    return `${a.apellido_paterno} ${a.apellido_materno}`
+                },
                 sorter: (a, b) => a.apellido_paterno.length - b.apellido_paterno.length,
                 sortOrder: sortedInfo.columnKey === 'apellido_paterno' && sortedInfo.order,
             },
             {
-                title: 'Apellido Materno',
-                dataIndex: 'apellido_materno',
-                key: 'apellido_materno',
-                sorter: (a, b) => a.apellido_materno.length - b.apellido_materno.length,
-                sortOrder: sortedInfo.columnKey === 'apellido_materno' && sortedInfo.order,
-            },
-            {
                 title: 'Sexo',
                 dataIndex: 'sexo',
+                filters: [
+                    { text: 'Masculino', value: 'M' },
+                    { text: 'Femenino', value: 'F' },
+                ],
                 key: 'sexo',
                 sorter: (a, b) => a.sexo.length - b.sexo.length,
                 sortOrder: sortedInfo.columnKey === 'sexo' && sortedInfo.order,
@@ -163,70 +179,82 @@ class Alumno extends PureComponent{
                                     )}
                                 </Mutation>
                             </Menu.Item>
-                            <Menu.Item key="2">Matricular</Menu.Item>
-                            <Menu.Item key="3">CV</Menu.Item>
+                            <Menu.Item key="2">Detalles</Menu.Item>
                         </Menu>
                     )
                     return(
-                        <Dropdown.Button overlay={actionMenu}>
-                            Editar
-                        </Dropdown.Button>
+                        <Dropdown.Button overlay={actionMenu} onClick={()=>this.handleDetalle(a.id)}>Detalles</Dropdown.Button>
                     )
                 }
             },
         ];
 
+
+        const rowSelection = {
+            selectedRowKeys: this.state.selectedRowKeys,
+            onChange: this.onSelectChange,
+        };
+
         return(
             <PageHeaderLayout>
-                <Card bordered={false}>
-                    <div className={styles.tableListOperator}>
-                        <Button type="primary" onClick={this.showModal}><Icon type="plus"/>Nuevo</Button>
-                        <Button type="primary"><Icon type="idcard"/>Carnet</Button>
-                        <Button type="primary"><Icon type="export"/>Exportar</Button>
-                        <Button type="primary"><Icon type="folder"/>Importar</Button>
-                        <Mutation mutation={CREATE_ALUMNO}>
-                            {(CreateAlumno, { loading, error, data }) => {
-                                if (loading) return <Spin/>;
-                                if (error) return (message.error(error.message));
-                                return (
-                                    <NuevoForm
-                                        wrappedComponentRef={(formRef) => this.formRef = formRef}
-                                        visible={this.state.visible}
-                                        loading={loading}
-                                        onCancel={this.handleCancel}
-                                        onCreate={()=>{
-                                            const form = this.formRef.props.form;
-                                            form.validateFields((err, values) => {
-                                                console.log(values);
-                                                if (err) {
-                                                    return;
+                <Card>
+                    <Row gutter={16}>
+                        <Col span={18}>
+                            <div className={styles.tableListOperator}>
+                                <Button type="primary" onClick={this.showModal}><Icon type="plus"/>Nuevo</Button>
+                                <Button type="primary"><Icon type="idcard"/>Carnet</Button>
+                                <Button type="primary"><Icon type="export"/>Exportar</Button>
+                                <Button type="primary"><Icon type="folder"/>Importar</Button>
+                                <Mutation mutation={CREATE_ALUMNO}>
+                                    {(CreateAlumno, { loading, error, data }) => {
+                                        if (loading) return <Spin/>;
+                                        if (error) return (message.error(error.message));
+                                        return (
+                                            <NuevoForm
+                                                wrappedComponentRef={(formRef) => this.formRef = formRef}
+                                                visible={this.state.visible}
+                                                loading={loading}
+                                                onCancel={this.handleCancel}
+                                                onCreate={()=>{
+                                                    const form = this.formRef.props.form;
+                                                    form.validateFields((err, values) => {
+                                                        console.log(values);
+                                                        if (err) {
+                                                            return;
+                                                        }
+                                                        CreateAlumno({ variables: values });
+                                                        form.resetFields();
+                                                        // if(!error){
+                                                        //     this.hideModal();
+                                                        // }
+                                                    });
                                                 }
-                                                CreateAlumno({ variables: values });
-                                                form.resetFields();
-                                                // if(!error){
-                                                //     this.hideModal();
-                                                // }
-                                            });
-                                        }
-                                    }/>
-                                )
-                            }}
-                        </Mutation>
-                    </div>
-                    <Query query={GET_ALUMNOS}>
-                        {({ loading, error, data }) => {
-                            if (loading) return <Spin/>;
-                            if (error) return <Alert type="error" message={`Error! ${error.message}`} banner />;
-                            return (
-                                <StandardTable
-                                    dataSource={data.Alumnos} 
-                                    columns={columns}
-                                    rowKey={ record => record.id } 
-                                    onChange={this.handleChange}
-                                    loading={loading}/>
-                            );
-                        }}
-                    </Query>
+                                            }/>
+                                        )
+                                    }}
+                                </Mutation>
+                            </div>
+                            <Query query={GET_ALUMNOS}>
+                                {({ loading, error, data }) => {
+                                    if (error) return <Alert type="error" message={`Error! ${error.message}`} banner />;
+                                    return (
+                                        <StandardTable
+                                            dataSource={data.Alumnos}
+                                            columns={columns}
+                                            rowSelection={rowSelection}
+                                            rowKey={ record => record.id } 
+                                            onChange={this.handleChange}
+                                            loading={loading}/>
+                                    );
+                                }}
+                            </Query>
+                        </Col>
+                        <Col span={6}>
+                            <Datalle id={this.state.detalleID}/>
+                        </Col>
+                    </Row>
+
+
                 </Card>
             </PageHeaderLayout>
         )
