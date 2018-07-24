@@ -1,14 +1,15 @@
+$global-header-height: 50px !default;
 .logo {
-    height: 64px;
+    height: $global-header-height;
     position: relative;
-    line-height: 64px;
+    line-height: $global-header-height;
     padding-left: (80 - 32px) / 2;
     transition: all 0.3s;
     overflow: hidden;
     img {
         display: inline-block;
         vertical-align: middle;
-        height: 32px;
+        height: 25px;
     }
     h1 {
         color: white;

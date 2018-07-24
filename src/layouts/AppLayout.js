@@ -135,7 +135,7 @@ class App extends Component{
                         <GlobalHeader
                             logo={logo}
                             currentUser={currentUser.usuario}
-                            collapsed={this.setState.collapsed}
+                            collapsed={this.state.collapsed}
                             isMobile={mb}
                             onMenuClick={this.handleMenuClick}
                             onCollapse={this.handleMenuCollapse}

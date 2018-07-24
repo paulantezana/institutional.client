@@ -20,19 +20,19 @@ const menu = [
     {
         id: 'carrera',
         name: 'Programa de estidios',
-        icon: 'user',
+        icon: 'laptop',
         path: '/carrera',
     },
     {
         id: 'profesor',
         name: 'Profesores',
-        icon: 'user',
+        icon: 'schedule',
         path: '/profesor',
     },
     {
         id: 'alumno',
         name: 'Alumnos',
-        icon: 'user',
+        icon: 'api',
         path: '/alumno',
     },
     {

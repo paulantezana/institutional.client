@@ -160,7 +160,10 @@ class Alumno extends PureComponent{
                 render: (a, record)=>{
                     const actionMenu = (
                         <Menu className={styles.action__menu}>
-                            <Menu.Item key="0">Editar</Menu.Item>
+                            <Menu.Item key="0">
+                                <Icon type="edit" className={styles.icon}/>
+                                <span>Editar</span>
+                            </Menu.Item>
                             <Menu.Item key="1">
                                 <Mutation mutation={DELETE_ALUMNO}>
                                     {(DeleteAlumno, { loading, error, data })=>(
@@ -175,11 +178,17 @@ class Alumno extends PureComponent{
                                                     DeleteAlumno({ variables: {id: a.id} });
                                                 }
                                             })
-                                        }}>Eliminar</div>
+                                        }}>
+                                            <Icon type="delete" className={styles.icon}/>
+                                            <span>Eliminar</span>
+                                        </div>
                                     )}
                                 </Mutation>
                             </Menu.Item>
-                            <Menu.Item key="2">Detalles</Menu.Item>
+                            <Menu.Item key="2" onClick={()=>this.handleDetalle(a.id)}>
+                                <Icon type="appstore-o" className={styles.icon}/>
+                                <span>Detalles</span>
+                            </Menu.Item>
                         </Menu>
                     )
                     return(
