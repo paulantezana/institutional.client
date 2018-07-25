@@ -11,7 +11,7 @@ import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './index.scss';
 
 //////////////////////////////////////////////////////////
-import NuevoForm from './nuevo';
+import DataItem from './item';
 import Datalle from './detalle';
 //////////////////////////////////////////////////////////
 
@@ -27,14 +27,6 @@ const GET_ALUMNOS = gql`{
         celular
     }
 }`;
-
-const CREATE_ALUMNO = gql`
-    mutation CreateAlumno($dni: String!, $nombres: String!, $apellido_paterno: String!, $apellido_materno: String!, $direccion: String, $celular: String, $pais: String, $sexo: String, $telefono: String, $fecha_nacimiento: DateTime, $departamento: String, $estado_civil: String){
-        CreateAlumno(dni: $dni, nombres: $nombres, apellido_paterno: $apellido_paterno, apellido_materno: $apellido_materno, direccion: $direccion, celular: $celular, pais: $pais, sexo: $sexo, telefono: $telefono, fecha_nacimiento: $fecha_nacimiento, departamento: $departamento, estado_civil: $estado_civil){
-            id
-        }
-    }
-`;
 
 const DELETE_ALUMNO = gql`
     mutation DeleteAlumno($id: Int!){
@@ -56,40 +48,13 @@ class Alumno extends PureComponent{
             selectedRowKeys: [],
         }
         this.handleChange = this.handleChange.bind(this);
-        this.showModal = this.showModal.bind(this);
-        this.hideModal = this.hideModal.bind(this);
-
-        this.handleCreate = this.handleCreate.bind(this);
-        this.handleCancel = this.handleCancel.bind(this);
-
         this.onSelectChange = this.onSelectChange.bind(this);
-
         this.handleDetalle = this.handleDetalle.bind(this);
+        this.handleOnModal = this.handleOnModal.bind(this);
     }
 
-    handleCancel(){
-        this.setState({ visible: false });
-    }
-
-    handleCreate(){
-        const form = this.formRef.props.form;
-        form.validateFields((err, values) => {
-            if (err) {
-              return;
-            }
-      
-            // console.log('Received values of form: ', values);
-            form.resetFields();
-            this.setState({ visible: false });
-        });
-    }
-
-    showModal(){
-        this.setState({ visible: true });
-    }
-
-    hideModal(){
-        this.setState({ visible: false });
+    handleOnModal(visibleModal){
+        this.setState({visibleModal})
     }
 
     handleChange(pagination, filters, sorter){
@@ -166,23 +131,27 @@ class Alumno extends PureComponent{
                             </Menu.Item>
                             <Menu.Item key="1">
                                 <Mutation mutation={DELETE_ALUMNO}>
-                                    {(DeleteAlumno, { loading, error, data })=>(
-                                        <div onClick={()=>{
-                                            Modal.confirm({
-                                                title: "¿Estás seguro de eliminar este registro?",
-                                                content: a.nombres,
-                                                okText: "SI",
-                                                okType: 'danger',
-                                                cancelText: "NO",
-                                                onOk(){
-                                                    DeleteAlumno({ variables: {id: a.id} });
-                                                }
-                                            })
-                                        }}>
-                                            <Icon type="delete" className={styles.icon}/>
-                                            <span>Eliminar</span>
-                                        </div>
-                                    )}
+                                    {(DeleteAlumno, { loading, error, data })=>{
+                                        if (error) message.error(error.message);
+                                        if (data) message.success(`El registro con el ID: ${data.DeleteAlumno.id} Fue eliminado exitosamente`);
+                                        return (
+                                            <div onClick={()=>{
+                                                Modal.confirm({
+                                                    title: "¿Estás seguro de eliminar este registro?",
+                                                    content: a.nombres,
+                                                    okText: "SI",
+                                                    okType: 'danger',
+                                                    cancelText: "NO",
+                                                    onOk(){
+                                                        DeleteAlumno({ variables: {id: 800} });
+                                                    }
+                                                })
+                                            }}>
+                                                <Icon type="delete" className={styles.icon}/>
+                                                <span>Eliminar</span>
+                                            </div>
+                                        )
+                                    }}
                                 </Mutation>
                             </Menu.Item>
                             <Menu.Item key="2" onClick={()=>this.handleDetalle(a.id)}>
@@ -198,7 +167,6 @@ class Alumno extends PureComponent{
             },
         ];
 
-
         const rowSelection = {
             selectedRowKeys: this.state.selectedRowKeys,
             onChange: this.onSelectChange,
@@ -210,42 +178,15 @@ class Alumno extends PureComponent{
                     <Row gutter={16}>
                         <Col span={18}>
                             <div className={styles.tableListOperator}>
-                                <Button type="primary" onClick={this.showModal}><Icon type="plus"/>Nuevo</Button>
+                                <Button type="primary" onClick={()=>this.handleOnModal(true)}><Icon type="plus"/>Nuevo</Button>
                                 <Button type="primary"><Icon type="idcard"/>Carnet</Button>
                                 <Button type="primary"><Icon type="export"/>Exportar</Button>
                                 <Button type="primary"><Icon type="folder"/>Importar</Button>
-                                <Mutation mutation={CREATE_ALUMNO}>
-                                    {(CreateAlumno, { loading, error, data }) => {
-                                        if (loading) return <Spin/>;
-                                        if (error) return (message.error(error.message));
-                                        return (
-                                            <NuevoForm
-                                                wrappedComponentRef={(formRef) => this.formRef = formRef}
-                                                visible={this.state.visible}
-                                                loading={loading}
-                                                onCancel={this.handleCancel}
-                                                onCreate={()=>{
-                                                    const form = this.formRef.props.form;
-                                                    form.validateFields((err, values) => {
-                                                        console.log(values);
-                                                        if (err) {
-                                                            return;
-                                                        }
-                                                        CreateAlumno({ variables: values });
-                                                        form.resetFields();
-                                                        // if(!error){
-                                                        //     this.hideModal();
-                                                        // }
-                                                    });
-                                                }
-                                            }/>
-                                        )
-                                    }}
-                                </Mutation>
+                                <DataItem visible={this.state.visibleModal} onModal={this.handleOnModal}/>
                             </div>
                             <Query query={GET_ALUMNOS}>
                                 {({ loading, error, data }) => {
-                                    if (error) return <Alert type="error" message={`Error! ${error.message}`} banner />;
+                                    if (error) message.error(error.message);
                                     return (
                                         <StandardTable
                                             dataSource={data.Alumnos}
@@ -262,8 +203,6 @@ class Alumno extends PureComponent{
                             <Datalle id={this.state.detalleID}/>
                         </Col>
                     </Row>
-
-
                 </Card>
             </PageHeaderLayout>
         )
