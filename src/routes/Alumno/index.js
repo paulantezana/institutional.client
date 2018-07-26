@@ -63,18 +63,17 @@ class Alumno extends PureComponent{
             search: "", // Search
             
             visibleModal: false,
-            detalleID: 0,
             selectedRowKeys: [],
 
+            currentID: 1,
             currentValues: {},
         }
         this.clearFilters = this.clearFilters.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.onSelectChange = this.onSelectChange.bind(this);
-        this.handleDetalle = this.handleDetalle.bind(this);
+        this.handleCurrentID = this.handleCurrentID.bind(this);
         this.handleOnModal = this.handleOnModal.bind(this);
-        this.handleFindEdit = this.handleFindEdit.bind(this);
     }
 
     clearFilters(){
@@ -83,10 +82,6 @@ class Alumno extends PureComponent{
             sortedInfo: null,
             search: "",
         })
-    }
-
-    handleFindEdit(data){
-        this.setState({currentValues: data})
     }
 
     handleSearch(search){
@@ -108,8 +103,8 @@ class Alumno extends PureComponent{
         this.setState({ selectedRowKeys });
     }
 
-    handleDetalle(detalleID){
-        this.setState({detalleID});
+    handleCurrentID(id){
+        this.setState({currentID: id});
     }
 
     render(){
@@ -164,19 +159,9 @@ class Alumno extends PureComponent{
                 render: (a, record)=>{
                     const actionMenu = (
                         <Menu className={styles.action__menu}>
-                            <Menu.Item key="0">
-                                <Query query={GET_ALUMNOS} variables={{id: a.id}}>
-                                    {({ loading, error, data }) => {
-                                        if (error) message.error(error.message);
-                                        handleFindEdit(data);
-                                        return (
-                                            <div>
-                                                <Icon type="edit" className={styles.icon}/>,
-                                                <span>Editar</span>
-                                            </div>
-                                        );
-                                    }}
-                                </Query>
+                            <Menu.Item key="0" onClick={()=>{this.handleCurrentID(a.id)}}>
+                                <Icon type="edit" className={styles.icon}/>,
+                                <span>Editar</span>
                             </Menu.Item>
                             <Menu.Item key="1">
                                 <Mutation mutation={DELETE_ALUMNO}>
@@ -203,14 +188,14 @@ class Alumno extends PureComponent{
                                     }}
                                 </Mutation>
                             </Menu.Item>
-                            <Menu.Item key="2" onClick={()=>this.handleDetalle(a.id)}>
+                            <Menu.Item key="2" onClick={()=>this.handleCurrentID(a.id)}>
                                 <Icon type="appstore-o" className={styles.icon}/>
                                 <span>Detalles</span>
                             </Menu.Item>
                         </Menu>
                     )
                     return(
-                        <Dropdown.Button trigger={['click']} overlay={actionMenu} onClick={()=>this.handleDetalle(a.id)}>Detalles</Dropdown.Button>
+                        <Dropdown.Button trigger={['click']} overlay={actionMenu} onClick={()=>this.handleCurrentID(a.id)}>Detalles</Dropdown.Button>
                     )
                 }
             },
@@ -257,7 +242,7 @@ class Alumno extends PureComponent{
                             </Query>
                         </Col>
                         <Col span={6}>
-                            <Datalle id={this.state.detalleID}/>
+                            <Datalle id={this.state.currentID}/>
                         </Col>
                     </Row>
                 </Card>
