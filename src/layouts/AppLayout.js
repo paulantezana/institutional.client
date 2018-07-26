@@ -142,7 +142,7 @@ class App extends Component{
                         />
                     </Header>
 
-                    <Content>
+                    <Content style={{ margin: '16px 16px 0', height: '100%' }}>
                         <Switch>
                             <Route exact path={`${match.url}`} component={Dashboard}/>
                             <Route exact path={`${match.url}profesor`} component={Profesor}/>
