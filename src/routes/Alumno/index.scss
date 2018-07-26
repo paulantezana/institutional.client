@@ -1,7 +1,19 @@
-.tableListOperator {
+.row {
     margin-bottom: 16px;
-    button {
-        margin-right: 8px;
+}
+
+.row{
+    .left{
+        button{
+            margin-right: 12px;
+        }
+    }
+    .right{
+        display: flex;
+        justify-content: flex-end;
+        button{
+            margin-left: 12px;
+        }
     }
 }
 

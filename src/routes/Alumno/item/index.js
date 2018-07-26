@@ -24,7 +24,7 @@ class DataItem extends PureComponent{
     }
 
     render(){
-        const {visible} = this.props;
+        const {visible, values} = this.props;
         return (
             <Mutation mutation={CREATE_ALUMNO}>
                 {(CreateAlumno, { loading, error, data }) => {
@@ -43,9 +43,9 @@ class DataItem extends PureComponent{
                                     }
                                     CreateAlumno({ variables: values });
                                     form.resetFields();
-                                    if(!error && !loading){
-                                        this.props.onModal(false);
-                                    }
+                                    // if(!error && !loading){
+                                        // this.props.onModal(false);
+                                    // }
                                 });
                             }
                         }/>

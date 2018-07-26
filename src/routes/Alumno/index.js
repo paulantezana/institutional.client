@@ -3,8 +3,10 @@ import React, { PureComponent } from 'react';
 import gql from "graphql-tag";
 import { Query, Mutation } from "react-apollo";
 
-import { Menu, Card, Button, Icon, Divider, Dropdown, Modal, Avatar, Spin, message, Alert } from 'antd';
+import { Menu, Card, Button, Icon, Divider, Dropdown, Modal, Avatar, Input, message, Alert } from 'antd';
 import { Row, Col } from 'antd';
+
+const Search = Input.Search;
 
 import StandardTable from '../../components/StandardTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
@@ -15,18 +17,34 @@ import DataItem from './item';
 import Datalle from './detalle';
 //////////////////////////////////////////////////////////
 
-const GET_ALUMNOS = gql`{
-    Alumnos{
-        id
-        dni
-        nombres
-        apellido_paterno
-        apellido_materno
-        sexo
-        estado
-        celular
+const GET_ALUMNOS = gql`
+    query Alumnos($dni: String) {
+        Alumnos(dni: $dni) {
+            id
+            dni
+            nombres
+            apellido_paterno
+            apellido_materno
+            sexo
+            estado
+            celular
+        }
     }
-}`;
+`;
+const GET_ALUMNOIDALL = gql`
+    query AlumnoID($id: Int!) {
+        AlumnoID(id: $id) {
+            id
+            dni
+            nombres
+            apellido_paterno
+            apellido_materno
+            sexo
+            estado
+            celular
+        }
+    }
+`;
 
 const DELETE_ALUMNO = gql`
     mutation DeleteAlumno($id: Int!){
@@ -40,17 +58,39 @@ class Alumno extends PureComponent{
     constructor(props){
         super(props)
         this.state = {
-            filteredInfo: null,
-            sortedInfo: null,
+            filteredInfo: null, // Filters
+            sortedInfo: null, // Sorted
+            search: "", // Search
+            
             visibleModal: false,
-
             detalleID: 0,
             selectedRowKeys: [],
+
+            currentValues: {},
         }
+        this.clearFilters = this.clearFilters.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.onSelectChange = this.onSelectChange.bind(this);
         this.handleDetalle = this.handleDetalle.bind(this);
         this.handleOnModal = this.handleOnModal.bind(this);
+        this.handleFindEdit = this.handleFindEdit.bind(this);
+    }
+
+    clearFilters(){
+        this.setState({
+            filteredInfo: null,
+            sortedInfo: null,
+            search: "",
+        })
+    }
+
+    handleFindEdit(data){
+        this.setState({currentValues: data})
+    }
+
+    handleSearch(search){
+        this.setState({search});
     }
 
     handleOnModal(visibleModal){
@@ -82,8 +122,6 @@ class Alumno extends PureComponent{
                 title: 'DNI',
                 dataIndex: 'dni',
                 key: 'dni',
-                sorter: (a, b) => a.dni.length - b.dni.length,
-                sortOrder: sortedInfo.columnKey === 'dni' && sortedInfo.order,
             },
             {
                 title: 'Nombres',
@@ -103,21 +141,22 @@ class Alumno extends PureComponent{
             },
             {
                 title: 'Sexo',
-                dataIndex: 'sexo',
                 filters: [
-                    { text: 'Masculino', value: 'M' },
-                    { text: 'Femenino', value: 'F' },
+                    { text: 'Masculino', value: '1' },
+                    { text: 'Femenino', value: '0' },
                 ],
+                filteredValue: filteredInfo.sexo || null,
+                onFilter: (value, record) => record.sexo.includes(value),
                 key: 'sexo',
-                sorter: (a, b) => a.sexo.length - b.sexo.length,
-                sortOrder: sortedInfo.columnKey === 'sexo' && sortedInfo.order,
+                render: (a, b)=>{
+                    if(a.sexo == "") return "";
+                    return (a.sexo == "0") ? "Femenino" : "Masculino";
+                },
             },
             {
                 title: 'Celular',
                 dataIndex: 'celular',
                 key: 'celular',
-                sorter: (a, b) => a.celular.length - b.celular.length,
-                sortOrder: sortedInfo.columnKey === 'celular' && sortedInfo.order,
             },
             {
                 title: 'Accion',
@@ -126,8 +165,18 @@ class Alumno extends PureComponent{
                     const actionMenu = (
                         <Menu className={styles.action__menu}>
                             <Menu.Item key="0">
-                                <Icon type="edit" className={styles.icon}/>
-                                <span>Editar</span>
+                                <Query query={GET_ALUMNOS} variables={{id: a.id}}>
+                                    {({ loading, error, data }) => {
+                                        if (error) message.error(error.message);
+                                        handleFindEdit(data);
+                                        return (
+                                            <div>
+                                                <Icon type="edit" className={styles.icon}/>,
+                                                <span>Editar</span>
+                                            </div>
+                                        );
+                                    }}
+                                </Query>
                             </Menu.Item>
                             <Menu.Item key="1">
                                 <Mutation mutation={DELETE_ALUMNO}>
@@ -143,7 +192,7 @@ class Alumno extends PureComponent{
                                                     okType: 'danger',
                                                     cancelText: "NO",
                                                     onOk(){
-                                                        DeleteAlumno({ variables: {id: 800} });
+                                                        DeleteAlumno({ variables: {id: a.id} });
                                                     }
                                                 })
                                             }}>
@@ -161,7 +210,7 @@ class Alumno extends PureComponent{
                         </Menu>
                     )
                     return(
-                        <Dropdown.Button overlay={actionMenu} onClick={()=>this.handleDetalle(a.id)}>Detalles</Dropdown.Button>
+                        <Dropdown.Button trigger={['click']} overlay={actionMenu} onClick={()=>this.handleDetalle(a.id)}>Detalles</Dropdown.Button>
                     )
                 }
             },
@@ -177,14 +226,22 @@ class Alumno extends PureComponent{
                 <Card bordered={false}>
                     <Row gutter={16}>
                         <Col span={18}>
-                            <div className={styles.tableListOperator}>
-                                <Button type="primary" onClick={()=>this.handleOnModal(true)}><Icon type="plus"/>Nuevo</Button>
-                                <Button type="primary"><Icon type="idcard"/>Carnet</Button>
-                                <Button type="primary"><Icon type="export"/>Exportar</Button>
-                                <Button type="primary"><Icon type="folder"/>Importar</Button>
-                                <DataItem visible={this.state.visibleModal} onModal={this.handleOnModal}/>
-                            </div>
-                            <Query query={GET_ALUMNOS}>
+                            <Row gutter={16} className={styles.row}>
+                                <Col span={12} className={styles.left}>
+                                    <Button type="primary" onClick={()=>this.handleOnModal(true)}>Nuevo</Button>
+                                    {/* <Button type="primary">Carnet</Button> */}
+                                    <DataItem visible={this.state.visibleModal} onModal={this.handleOnModal}/>
+                                </Col>
+                                <Col span={12} className={styles.right}>
+                                    <Button onClick={this.clearFilters}>Borrar filtros</Button>
+                                </Col>
+                            </Row>
+                            <Row gutter={16} className={styles.row}>
+                                <Col span={24}>
+                                    <Search placeholder="Buscar por DNI" onSearch={value => this.handleSearch(value)}/>
+                                </Col>
+                            </Row>
+                            <Query query={GET_ALUMNOS} variables={{dni: this.state.search}}>
                                 {({ loading, error, data }) => {
                                     if (error) message.error(error.message);
                                     return (
