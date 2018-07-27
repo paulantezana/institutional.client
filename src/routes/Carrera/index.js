@@ -7,12 +7,21 @@ import { message, Card, Button, Icon, Divider, Avatar, Modal, Form, Spin, Alert,
 
 import StandardTable from '../../components/StandardTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
+import styles from './index.scss';
 
 const GET_CARRERAS = gql`{
     Carreras{
         id
         nombre
         creacion
+    }
+}`;
+
+const GET_SEMESTRES = gql`{
+    Semestres{
+        id
+        nombre
+        year
     }
 }`;
 
@@ -43,7 +52,7 @@ class Carrera extends PureComponent{
         sortedInfo = sortedInfo || {};
         filteredInfo = filteredInfo || {};
 
-        const columns = [
+        const columnsCarrera = [
             {
                 title: 'Nombre',
                 dataIndex: 'nombre',
@@ -56,29 +65,71 @@ class Carrera extends PureComponent{
             },
         ];
 
+        const columnsSemestre = [
+            {
+                title: 'Nombre',
+                dataIndex: 'nombre',
+                key: 'nombre',
+            },
+            {
+                title: 'Año',
+                dataIndex: 'year',
+                key: 'year',
+            },
+        ];
+
         return(
             <PageHeaderLayout>
                 <Card bordered={false}>
                     <Row gutter={16}>
-                        <Col xs={12} sm={8} md={6} lg={4}>
-                            <Button icon="plus" onClick={()=>this.handleOnModalCarrera(true)}/>
-                            <CarreraItem visible={this.state.modalCarrera} onModal={this.handleOnModalCarrera}/>
-                            <Query query={GET_CARRERAS}>
-                                {({ loading, error, data }) => {
-                                    if (error) message.error(error.message);
-                                    return (
-                                        <StandardTable
-                                            dataSource={data.Carreras}
-                                            columns={columns}
-                                            pagination={false}
-                                            // rowSelection={rowSelection}
-                                            rowKey={ record => record.id } 
-                                            loading={loading}/>
-                                    );
-                                }}
-                            </Query>
+                        <Col xs={24} sm={12} md={8} lg={6}>
+                            <div className={styles.row}>
+                                <Button icon="plus" size="small" onClick={()=>this.handleOnModalCarrera(true)}/>
+                                <CarreraItem visible={this.state.modalCarrera} onModal={this.handleOnModalCarrera}/>
+                            </div>
+                            <div className={styles.row}>
+                                <Query query={GET_CARRERAS}>
+                                    {({ loading, error, data }) => {
+                                        if (error) message.error(error.message);
+                                        return (
+                                            <StandardTable
+                                                dataSource={data.Carreras}
+                                                columns={columnsCarrera}
+                                                pagination={false}
+                                                // rowSelection={rowSelection}
+                                                rowKey={ record => record.id } 
+                                                loading={loading}/>
+                                            );
+                                        }}
+                                </Query>
+                            </div>
+                            <Divider/>
+                            <div className={styles.row}>
+                                <Button.Group>
+                                    <Button icon="plus" onClick={()=>this.handleOnModalCarrera(true)}/>
+                                    <Button icon="database" onClick={()=>this.handleOnModalCarrera(true)}/>
+                                    <Button icon="filter" onClick={()=>this.handleOnModalCarrera(true)}/>
+                                </Button.Group>
+                                <CarreraItem visible={this.state.modalCarrera} onModal={this.handleOnModalCarrera}/>
+                            </div>
+                            <div className={styles.row}>
+                                <Query query={GET_SEMESTRES}>
+                                    {({ loading, error, data }) => {
+                                        if (error) message.error(error.message);
+                                        return (
+                                            <StandardTable
+                                                dataSource={data.Semestres}
+                                                columns={columnsSemestre}
+                                                pagination={false}
+                                                // rowSelection={rowSelection}
+                                                rowKey={ record => record.id } 
+                                                loading={loading}/>
+                                            );
+                                        }}
+                                </Query>
+                            </div>
                         </Col>
-                        <Col xs={12} sm={16} md={18} lg={20}>
+                        <Col xs={24} sm={12} md={16} lg={18}>
                             vbvs vjssdhbvjv jsdvhbsdjd hvbsj dhvb  jsdh bvhbsdv vbisd bvsdh bvj vvbjsdb sdhvjd jsdvhbsdjd hvbsj dhvb  jsdh bvhbsdv vbisd bvsdh bvj vvbjsdb sdhvjd jsdvhbsdjd hvbsj dhvb  jsdh bvhbsdv vbisd bvsdh bvj vvbjsdb sdhvjd
                         </Col>
                     </Row>
