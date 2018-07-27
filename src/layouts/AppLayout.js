@@ -62,7 +62,7 @@ import Dashboard from '../routes/Dashboard';
 import Alumno from '../routes/Alumno';
 import Profesor from '../routes/Profesor';
 import Personal from '../routes/Personal';
-
+import Carrera from '../routes/Carrera';
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -148,6 +148,7 @@ class App extends Component{
                             <Route exact path={`${match.url}profesor`} component={Profesor}/>
                             <Route exact path={`${match.url}alumno`} component={Alumno}/>
                             <Route exact path={`${match.url}personal`} component={Personal}/>
+                            <Route exact path={`${match.url}carrera`} component={Carrera}/>
                         </Switch>
                     </Content>
 

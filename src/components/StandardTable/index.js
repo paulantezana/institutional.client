@@ -20,6 +20,7 @@ class StandardTable extends PureComponent {
             columns,
             rowKey,
             rowSelection,
+            pagination,
         } = this.props;
         return (
             <div className={styles.standardTable}>
@@ -41,7 +42,7 @@ class StandardTable extends PureComponent {
                     dataSource={dataSource}
                     columns={columns}
                     size="small"
-                    // pagination={paginationProps}
+                    pagination={pagination}
                     onChange={this.handleTableChange}
                 />
             </div>

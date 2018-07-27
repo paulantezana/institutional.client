@@ -5,21 +5,15 @@ const menu = [
         icon: 'dashboard',
         path: '',
     },
-    {
-        id: 'instituto',
-        name: 'Instituto',
-        icon: 'credit-card',
-        path: '/instituto',
-    },
-    {
-        id: 'filial',
-        name: 'Filiales',
-        icon: 'shopping-cart',
-        path: '/filial',
-    },
+    // {
+    //     id: 'filial',
+    //     name: 'Filiales',
+    //     icon: 'credit-card',
+    //     path: '/filial',
+    // },
     {
         id: 'carrera',
-        name: 'Programa de estidios',
+        name: 'Carreras',
         icon: 'laptop',
         path: '/carrera',
     },
