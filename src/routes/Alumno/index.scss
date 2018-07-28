@@ -1,8 +1,5 @@
-.row {
-    margin-bottom: 16px;
-}
-
 .row{
+    margin-bottom: 16px;
     .left{
         button{
             margin-right: 12px;
@@ -14,6 +11,12 @@
         button{
             margin-left: 12px;
         }
+    }
+}
+
+.search{
+    .options{
+        margin: 10px 0;
     }
 }
 
