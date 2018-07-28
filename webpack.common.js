@@ -7,32 +7,20 @@ const webpack = require('webpack');
 // const extractLESS = new ExtractTextPlugin('stylesheets/[name]-two.css');
 
 const path = require('path');
+const srcDir = path.resolve( __dirname, 'src' );
+const publicDir = path.resolve( __dirname, 'public' );
 
 // const HOST = process.env.HOST || "127.0.0.1";
 // const PORT = process.env.PORT || "8888";
 
 module.exports = {
-    entry: './src/index.js',
+    context: srcDir,
+    entry: './index.js',
     output: {
-        path: path.resolve(__dirname, 'public'),
-        publicPath: '/',
-        filename: 'main.js'
-    },
-    devServer: {
-        contentBase : path.join(__dirname, 'public'),
-        // enable HMR
-        hot: true,
-        // embed the webpack-dev-server runtime into the bundle
-        inline: true,
-        // serve index.html in place of 404 responses to allow HTML5 history
-        historyApiFallback: true,
-        // port: PORT,
-        // host: HOST,
-
-        compress    : true,
-        port        : 3001,
-        open        : true,
-        // stats       : 'errors-only',
+        path: publicDir,
+        publicPath: './',
+        filename: 'main.js',
+        sourceMapFilename: 'main.map'
     },
     module: {
         rules: [
@@ -111,16 +99,17 @@ module.exports = {
             allChunks: true
         }),
         new HtmlWebpackPlugin({
+            template: path.join(srcDir, 'index.pug'),
             filename    : 'index.html',
-            minify      : {
-                collapseWhitespace: true
-            },
             hash        : true,
-            template    : './src/index.pug',
+            minify      : {
+                collapseWhitespace: true,
+                removeComments: true,
+            },
         }),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
-        new FaviconsWebpackPlugin('./src/assets/logo.png')
+        new FaviconsWebpackPlugin('./assets/logo.png')
     ]
 };
