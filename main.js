@@ -1,4 +1,5 @@
 // Modules to control application life and create native browser window
+const express = require('./server'); //your express app
 const {app, BrowserWindow} = require('electron')
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -10,7 +11,7 @@ function createWindow () {
   mainWindow = new BrowserWindow({width: 800, height: 600})
 
   // and load the index.html of the app.
-  mainWindow.loadFile('./public/index.html')
+  mainWindow.loadURL('http://localhost:3030')
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()

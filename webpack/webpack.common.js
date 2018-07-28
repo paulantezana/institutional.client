@@ -1,17 +1,12 @@
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
-// const extractCSS = new ExtractTextPlugin('stylesheets/[name]-one.css');
-// const extractLESS = new ExtractTextPlugin('stylesheets/[name]-two.css');
-
 const path = require('path');
-const srcDir = path.resolve( __dirname, 'src' );
-const publicDir = path.resolve( __dirname, 'public' );
+const srcDir = path.resolve( __dirname, '../src' );
+const publicDir = path.resolve( __dirname, '../public' );
 
-// const HOST = process.env.HOST || "127.0.0.1";
-// const PORT = process.env.PORT || "8888";
+const IS_DEV = process.env.NODE_ENV !== 'production';
 
 module.exports = {
     context: srcDir,
@@ -28,39 +23,47 @@ module.exports = {
                 test: /\.css$/,
                 use:  ExtractTextPlugin.extract({
                     fallback: 'style-loader',
-                    use : [{
-                        loader: 'css-loader',
-                        options: {
-                            url: false,
-                            minimize: true,
-                            sourceMap: true,
-                        }
-                    },'postcss-loader']
+                    use : [
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                url: false,
+                                minimize: true,
+                                sourceMap: IS_DEV,
+                            }
+                        },
+                        {
+                            loader: 'postcss-loader',
+                            options: { sourceMap: IS_DEV }
+                        },
+                    ]
                 })
             },
             {
                 test: /\.scss$/,
                 use: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
+                    fallback: {
+                        loader: 'style-loader',
+                        options: {sourceMap: IS_DEV}
+                    },
                     use: [
                         {
                             loader: 'css-loader',
                             options: {
                                 url: false,
                                 minimize: true,
-                                sourceMap: true,
+                                sourceMap: IS_DEV,
                                 modules: true,
-                                localIdentName: '[local]__[hash:base64:5]',
+                                localIdentName: IS_DEV ? '[local]':'[local]__[hash:base64:5]',
                             }   
                         },
                         {
-                            loader: 'postcss-loader'
+                            loader: 'postcss-loader',
+                            options: { sourceMap: IS_DEV }
                         },
                         {
                             loader: 'sass-loader',
-                            options: {
-                                sourceMap: true
-                            }
+                            options: { sourceMap: IS_DEV }
                         }
                     ]
                 })
@@ -86,7 +89,7 @@ module.exports = {
             },
 
             {
-                test    : /\.(png|jpg|svg)$/,
+                test    : /\.(png|jpg|svg|ttf|woff|woff2)$/,
                 use     : 'file-loader'
             },
         ]
@@ -96,20 +99,9 @@ module.exports = {
             filename:  (getPath) => {
                 return getPath('[name].css').replace('css/js', 'css');
             },
-            allChunks: true
+            disable: IS_DEV,
         }),
-        new HtmlWebpackPlugin({
-            template: path.join(srcDir, 'index.pug'),
-            filename    : 'index.html',
-            hash        : true,
-            minify      : {
-                collapseWhitespace: true,
-                removeComments: true,
-            },
-        }),
-        new webpack.optimize.OccurrenceOrderPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoEmitOnErrorsPlugin(),
+        new webpack.EnvironmentPlugin(['NODE_ENV']),
         new FaviconsWebpackPlugin('./assets/logo.png')
     ]
 };

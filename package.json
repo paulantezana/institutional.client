@@ -4,17 +4,17 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "pro": "webpack --config webpack.prod.js",
+    "pro": "cross-env NODE_ENV=production webpack -p --progress --config=webpack/webpack.prod.js",
     "dev": "webpack-dev-server --config webpack.dev.js",
-    "start": "npm run build && node server.js",
+    "start": "node server.js",
     "win": "electron .",
     "dist": "electron-builder"
   },
   "build": {
     "appId": "com.paulantezana.test",
     "win": {
-      "target": "nsis",
-      "icon": "build/icon.ico"
+      "target": "portable",
+      "icon": "src/assets/icon.ico"
     }
   },
   "keywords": [],
@@ -54,6 +54,7 @@
     "bizcharts": "^3.1.10",
     "classnames": "^2.2.6",
     "connected-react-router": "^4.3.0",
+    "cross-env": "^5.2.0",
     "enquire-js": "^0.2.1",
     "express": "^4.16.3",
     "graphql": "^0.13.2",
