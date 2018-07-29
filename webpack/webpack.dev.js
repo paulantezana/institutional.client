@@ -10,7 +10,7 @@ const publicDir = path.resolve( __dirname, '../public' );
 
 module.exports = merge(common, {
     mode: 'development',
-    devtool: 'inline-source-map',
+    // devtool: 'inline-source-map',
     devServer: {
         contentBase : publicDir,
         // enable HMR
@@ -23,21 +23,22 @@ module.exports = merge(common, {
         // host: HOST,
 
         compress    : true,
-        port        :  process.env.PORT||3001,
+        port        : 3001,
         open        : true,
         // stats       : 'errors-only',
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NamedModulesPlugin(),
         new HtmlWebpackPlugin({
-            template: path.join(srcDir, 'index.pug'),
             filename    : 'index.html',
             minify      : {
-                collapseWhitespace: true,
-                removeComments: true,
+                collapseWhitespace: true
             },
+            hash        : true,
+            template    : './index.pug',
         }),
-        new webpack.NamedModulesPlugin(),
+        new webpack.optimize.OccurrenceOrderPlugin(),
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NoEmitOnErrorsPlugin(),
+        // new FaviconsWebpackPlugin('./assets/logo.png')
     ]
 });

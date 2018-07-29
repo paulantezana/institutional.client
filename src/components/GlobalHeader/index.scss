@@ -11,6 +11,13 @@ $global-header-height: 50px !default;
     position: relative;
 }
 
+:global {
+    .ant-layout {
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+}
+
 .logo {
     height: $global-header-height;
     line-height: $global-header-height - 6px;
@@ -25,6 +32,15 @@ $global-header-height: 50px !default;
     }
 }
 
+.menu {
+    :global(.anticon) {
+        margin-right: 8px;
+    }
+    :global(.ant-dropdown-menu-item) {
+        width: 160px;
+    }
+}
+
 i.trigger {
     font-size: 20px;
     line-height: $global-header-height;
@@ -33,13 +49,6 @@ i.trigger {
     padding: 0 15px;
     &:hover {
         background: $action-hover;
-    }
-}
-
-.menu {
-    width: 170px;
-    .icon{
-        margin-right: 8px;
     }
 }
 
@@ -57,7 +66,8 @@ i.trigger {
             vertical-align: middle;
             // color: @text-color;
         }
-        &:hover{
+        &:hover,
+        &:global(.ant-popover-open) {
             background: $action-hover;
         }
     }
@@ -80,6 +90,9 @@ i.trigger {
 
 @include to (md) {
     .header {
+        :global(.ant-divider-vertical) {
+            vertical-align: unset;
+        }
         .name {
             display: none;
         }

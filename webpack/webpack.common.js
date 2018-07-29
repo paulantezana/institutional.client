@@ -13,7 +13,7 @@ module.exports = {
     entry: './index.js',
     output: {
         path: publicDir,
-        publicPath: './',
+        publicPath: '/',
         filename: 'main.js',
         sourceMapFilename: 'main.map'
     },
@@ -23,29 +23,20 @@ module.exports = {
                 test: /\.css$/,
                 use:  ExtractTextPlugin.extract({
                     fallback: 'style-loader',
-                    use : [
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                url: false,
-                                minimize: true,
-                                sourceMap: IS_DEV,
-                            }
-                        },
-                        {
-                            loader: 'postcss-loader',
-                            options: { sourceMap: IS_DEV }
-                        },
-                    ]
+                    use : [{
+                        loader: 'css-loader',
+                        options: {
+                            url: false,
+                            minimize: true,
+                            sourceMap: IS_DEV,
+                        }
+                    },'postcss-loader']
                 })
             },
             {
                 test: /\.scss$/,
                 use: ExtractTextPlugin.extract({
-                    fallback: {
-                        loader: 'style-loader',
-                        options: {sourceMap: IS_DEV}
-                    },
+                    fallback: 'style-loader',
                     use: [
                         {
                             loader: 'css-loader',
@@ -54,16 +45,17 @@ module.exports = {
                                 minimize: true,
                                 sourceMap: IS_DEV,
                                 modules: true,
-                                localIdentName: IS_DEV ? '[local]':'[local]__[hash:base64:5]',
+                                localIdentName: '[local]__[hash:base64:5]',
                             }   
                         },
                         {
-                            loader: 'postcss-loader',
-                            options: { sourceMap: IS_DEV }
+                            loader: 'postcss-loader'
                         },
                         {
                             loader: 'sass-loader',
-                            options: { sourceMap: IS_DEV }
+                            options: {
+                                sourceMap: IS_DEV
+                            }
                         }
                     ]
                 })
@@ -89,7 +81,7 @@ module.exports = {
             },
 
             {
-                test    : /\.(png|jpg|svg|ttf|woff|woff2)$/,
+                test    : /\.(png|jpg|svg)$/,
                 use     : 'file-loader'
             },
         ]
@@ -99,9 +91,10 @@ module.exports = {
             filename:  (getPath) => {
                 return getPath('[name].css').replace('css/js', 'css');
             },
-            disable: IS_DEV,
+            allChunks: true,
+            // disable: IS_DEV,
         }),
-        new webpack.EnvironmentPlugin(['NODE_ENV']),
+        // new webpack.EnvironmentPlugin(['NODE_ENV']),
         new FaviconsWebpackPlugin('./assets/logo.png')
     ]
 };

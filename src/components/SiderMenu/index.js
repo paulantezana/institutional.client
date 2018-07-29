@@ -8,16 +8,18 @@ import SiderMenu from './SiderMenu';
 const SiderMenuWrapper = props => {
     const { isMobile, collapsed, onCollapse } = props;
     return isMobile ? (
-        <Drawer
-          placement="left"
-          closable={true}
-          onClose={onCollapse}
-          visible={collapsed}>
-          {/* <SiderMenu {...props} collapsed={isMobile ? false : collapsed}/> */}
-          sosss
-        </Drawer>
+        <DrawerMenu
+            getContainer={null}
+            level={null}
+            handleChild={<i className="drawer-handle-icon" />}
+            onHandleClick={onCollapse}
+            open={!collapsed}
+            onMaskClick={onCollapse}
+            >
+            <SiderMenu {...props} collapsed={isMobile ? false : collapsed} />
+        </DrawerMenu>
     ) : (
-        <SiderMenu {...props}/>
+        <SiderMenu {...props} />
     );
 };
 

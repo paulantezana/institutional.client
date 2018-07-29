@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "pro": "cross-env NODE_ENV=production webpack -p --progress --config=webpack/webpack.prod.js",
-    "dev": "webpack-dev-server --config webpack.dev.js",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --colors --config=webpack/webpack.dev.js",
     "start": "node server.js",
     "win": "electron .",
     "dist": "electron-builder"
