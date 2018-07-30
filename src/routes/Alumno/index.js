@@ -220,7 +220,7 @@ class Alumno extends PureComponent{
                             </Row>
                             <Query
                                 query={GET_ALUMNOS} variables={{search: this.state.search}} 
-                                // fetchPolicy="cache-and-network"
+                                fetchPolicy="cache-and-network"
                                 onError={error=>message.error(error.message)}>
                                 {({ loading, data, refetch, fetchMore }) => {
                                     return (
@@ -228,8 +228,8 @@ class Alumno extends PureComponent{
                                             <Row gutter={16} className={styles.row}>
                                                 <Col span={12} className={styles.left}>
                                                     <Button type="primary" onClick={()=>this.handleOnModal(true)}>Nuevo</Button>
-                                                    <Button icon="reload" onClick={()=>refetch({variables: {search: this.state.search}})}/>                                                    
-                                                    <DataItem visible={this.state.visibleModal} onModal={this.handleOnModal}/>
+                                                    <Button icon="reload" onClick={()=>refetch()}/>                                                    
+                                                    <DataItem visible={this.state.visibleModal} onModal={this.handleOnModal} refetchTable={refetch}/>
                                                 </Col>
                                                 <Col span={12} className={styles.right}>
                                                     <Button onClick={this.clearFilters}>Borrar filtros</Button>

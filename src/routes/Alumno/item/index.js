@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 
 import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
+import { message } from 'antd';
 
 import NuevoForm from './form';
 
@@ -17,16 +18,23 @@ class DataItem extends PureComponent{
     constructor(props){
         super(props);
         this.handleCancel = this.handleCancel.bind(this);
+        this.handleCompleted = this.handleCompleted.bind(this);
     }
 
     handleCancel(){
+        this.props.onModal(false);
+        this.props.refetchTable();
+    }
+
+    handleCompleted(){
+        this.props.refetchTable();
         this.props.onModal(false);
     }
 
     render(){
         const {visible, values} = this.props;
         return (
-            <Mutation mutation={CREATE_ALUMNO}>
+            <Mutation mutation={CREATE_ALUMNO} onCompleted={this.handleCompleted} >
                 {(CreateAlumno, { loading, error, data }) => {
                     return (
                         <NuevoForm
@@ -43,9 +51,6 @@ class DataItem extends PureComponent{
                                     }
                                     CreateAlumno({ variables: values });
                                     form.resetFields();
-                                    // if(!error && !loading){
-                                        // this.props.onModal(false);
-                                    // }
                                 });
                             }
                         }/>
