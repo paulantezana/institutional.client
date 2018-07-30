@@ -11,6 +11,7 @@ import {routerMiddleware, connectRouter} from 'connected-react-router';
 
 import {composeWithDevTools} from 'redux-devtools-extension';
 import rootReducer from './redux/reducers';
+import registerServiceWorker from './helpers/registerServiceWorker';
 
 // Assets
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
@@ -60,3 +61,6 @@ if (module.hot) {
         store.replaceReducer(connectRouter(history)(rootReducer))
     })
 }
+
+// Service Worker
+registerServiceWorker();

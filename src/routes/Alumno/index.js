@@ -68,6 +68,7 @@ class Alumno extends PureComponent{
             selectedRowKeys: [],
 
             currentID: 1,
+            mode: 0,
             currentValues: {},
         }
         this.clearFilters = this.clearFilters.bind(this);
@@ -77,6 +78,7 @@ class Alumno extends PureComponent{
         this.onSelectChange = this.onSelectChange.bind(this);
         this.handleCurrentID = this.handleCurrentID.bind(this);
         this.handleOnModal = this.handleOnModal.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
     }
 
     clearFilters(){
@@ -107,7 +109,18 @@ class Alumno extends PureComponent{
     }
 
     handleCurrentID(id){
-        this.setState({currentID: id});
+        this.setState({
+            currentID: id,
+            mode: 0,
+        });
+    }
+
+    handleEdit(id){
+        this.setState({
+            currentID: id,
+            mode: 1,
+            visibleModal: true,
+        });
     }
 
     render(){
@@ -162,7 +175,7 @@ class Alumno extends PureComponent{
                 render: (a, record)=>{
                     const actionMenu = (
                         <Menu className={styles.action__menu}>
-                            <Menu.Item key="0" onClick={()=>{this.handleCurrentID(a.id)}}>
+                            <Menu.Item key="0" onClick={()=>{this.handleEdit(a.id)}}>
                                 <Icon type="edit" className={styles.icon}/>,
                                 <span>Editar</span>
                             </Menu.Item>
@@ -229,7 +242,7 @@ class Alumno extends PureComponent{
                                                 <Col span={12} className={styles.left}>
                                                     <Button type="primary" onClick={()=>this.handleOnModal(true)}>Nuevo</Button>
                                                     <Button icon="reload" onClick={()=>refetch()}/>                                                    
-                                                    <DataItem visible={this.state.visibleModal} onModal={this.handleOnModal} refetchTable={refetch}/>
+                                                    <DataItem visible={this.state.visibleModal} onModal={this.handleOnModal} refetchTable={refetch} mode={this.state.mode} currentID={this.state.currentID}/>
                                                 </Col>
                                                 <Col span={12} className={styles.right}>
                                                     <Button onClick={this.clearFilters}>Borrar filtros</Button>
