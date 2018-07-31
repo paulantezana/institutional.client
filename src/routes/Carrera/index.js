@@ -5,9 +5,11 @@ import { Query } from "react-apollo";
 
 import { message, Card, Button, Icon, Divider, Avatar, Modal, Form, Spin, Alert, Row, Col } from 'antd';
 
-import StandardTable from '../../components/StandardTable';
+import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './index.scss';
+import Carrera from './components/Carrera';
+// alert("Hola");
 
 const GET_CARRERAS = gql`{
     Carreras{
@@ -29,7 +31,7 @@ const GET_SEMESTRES = gql`{
 import CarreraItem from './Item/CarreraItem';
 //////////////////////////////////////////////////////////
 
-class Carrera extends PureComponent{
+class CarreraPage extends PureComponent{
     constructor(props){
         super(props)
         this.state = {
@@ -52,19 +54,6 @@ class Carrera extends PureComponent{
         sortedInfo = sortedInfo || {};
         filteredInfo = filteredInfo || {};
 
-        const columnsCarrera = [
-            {
-                title: 'Nombre',
-                dataIndex: 'nombre',
-                key: 'nombre',
-            },
-            {
-                title: 'Creacion',
-                dataIndex: 'creacion',
-                key: 'creacion',
-            },
-        ];
-
         const columnsSemestre = [
             {
                 title: 'Nombre',
@@ -82,26 +71,9 @@ class Carrera extends PureComponent{
             <PageHeaderLayout>
                 <Card bordered={false}>
                     <Row gutter={16}>
-                        <Col xs={24} sm={12} md={8} lg={6}>
+                        <Col xs={24} sm={12} md={8}>
                             <div className={styles.row}>
-                                <Button icon="plus" size="small" onClick={()=>this.handleOnModalCarrera(true)}/>
-                                <CarreraItem visible={this.state.modalCarrera} onModal={this.handleOnModalCarrera}/>
-                            </div>
-                            <div className={styles.row}>
-                                <Query query={GET_CARRERAS}>
-                                    {({ loading, error, data }) => {
-                                        if (error) message.error(error.message);
-                                        return (
-                                            <StandardTable
-                                                dataSource={data.Carreras}
-                                                columns={columnsCarrera}
-                                                pagination={false}
-                                                // rowSelection={rowSelection}
-                                                rowKey={ record => record.id } 
-                                                loading={loading}/>
-                                            );
-                                        }}
-                                </Query>
+                                <Carrera/>
                             </div>
                             <Divider/>
                             <div className={styles.row}>
@@ -129,8 +101,7 @@ class Carrera extends PureComponent{
                                 </Query>
                             </div>
                         </Col>
-                        <Col xs={24} sm={12} md={16} lg={18}>
-                            vbvs vjssdhbvjv jsdvhbsdjd hvbsj dhvb  jsdh bvhbsdv vbisd bvsdh bvj vvbjsdb sdhvjd jsdvhbsdjd hvbsj dhvb  jsdh bvhbsdv vbisd bvsdh bvj vvbjsdb sdhvjd jsdvhbsdjd hvbsj dhvb  jsdh bvhbsdv vbisd bvsdh bvj vvbjsdb sdhvjd
+                        <Col xs={24} sm={12} md={16}>
                         </Col>
                     </Row>
                 </Card>
@@ -139,4 +110,4 @@ class Carrera extends PureComponent{
     }
 }
 
-export default Carrera;
+export default CarreraPage;

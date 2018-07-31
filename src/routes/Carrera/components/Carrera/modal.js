@@ -1,0 +1,64 @@
+import React, { PureComponent } from 'react';
+
+import gql from "graphql-tag";
+import { Query, Mutation } from "react-apollo";
+
+import { Table, DatePicker, Radio, Icon, InputNumber, Select, Modal, Form, Input, Alert } from 'antd';
+
+const formItemLayout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 12 },
+};
+
+const ModalForm = Form.create()(
+    class extends React.Component{
+        render(){
+            const { visible, onCancel, onCreate, form, errorMessage, confirmLoading } = this.props;
+            const { getFieldDecorator } = form;
+            return (
+                <Modal 
+                    title="Nueva Carrera"
+                    okText="Guardar"
+                    confirmLoading={confirmLoading}
+                    onCancel={onCancel}
+                    onOk={onCreate}
+                    visible={visible}>
+                    {
+                        errorMessage && 
+                        <Alert message = {errorMessage} type="error" showIcon/>
+                    }
+                    <Form layout="horizontal">
+                        <Form.Item hasFeedback {...formItemLayout} label="Nombre">
+                            {getFieldDecorator('nombre', {
+                                rules: [{ required: true, message: 'Please input the title of collection!' }],
+                            })(
+                                <Input/>
+                            )}
+                        </Form.Item>
+                        <Form.Item hasFeedback {...formItemLayout} label="Creacion">
+                            {getFieldDecorator('creacion',{
+                                rules: [{ type: 'number', message: '¡Ingrese un año válido!' }],
+                            })(
+                                <InputNumber style={{ width: "10rem"}}/>
+                            )}
+                        </Form.Item>
+                        <Form.Item hasFeedback {...formItemLayout} label="Logo">
+                            {getFieldDecorator('logo')(
+                                <Input/>
+                            )}
+                        </Form.Item>
+                        <Form.Item hasFeedback {...formItemLayout} label="Filial">
+                            {getFieldDecorator('filial_id',{
+                                rules: [{ type: 'number', message: '¡Ingrese un ID válido!' }],
+                            })(
+                                <InputNumber style={{ width: "10rem"}}/>
+                            )}
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            )
+        }
+    }
+)
+
+export default ModalForm;

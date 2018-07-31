@@ -53,7 +53,6 @@ class DataItem extends PureComponent{
 
     handleCancel(){
         this.props.onModal(false);
-        this.props.refetchTable();
     }
 
     handleCompleted(){
