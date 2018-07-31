@@ -13,7 +13,7 @@ const formItemLayout = {
 const ModalForm = Form.create()(
     class extends React.Component{
         render(){
-            const { visible, onCancel, onCreate, form, errorMessage, confirmLoading } = this.props;
+            const { visible, onCancel, onCreate, form, errorMessage, confirmLoading, data = {} } = this.props;
             const { getFieldDecorator } = form;
             return (
                 <Modal 
@@ -30,6 +30,7 @@ const ModalForm = Form.create()(
                     <Form layout="horizontal">
                         <Form.Item hasFeedback {...formItemLayout} label="Nombre">
                             {getFieldDecorator('nombre', {
+                                initialValue: data.nombre,
                                 rules: [{ required: true, message: 'Please input the title of collection!' }],
                             })(
                                 <Input/>
@@ -37,18 +38,22 @@ const ModalForm = Form.create()(
                         </Form.Item>
                         <Form.Item hasFeedback {...formItemLayout} label="Creacion">
                             {getFieldDecorator('creacion',{
+                                initialValue: data.creacion,
                                 rules: [{ type: 'number', message: '¡Ingrese un año válido!' }],
                             })(
                                 <InputNumber style={{ width: "10rem"}}/>
                             )}
                         </Form.Item>
                         <Form.Item hasFeedback {...formItemLayout} label="Logo">
-                            {getFieldDecorator('logo')(
+                            {getFieldDecorator('logo',{
+                                initialValue: data.logo,
+                            })(
                                 <Input/>
                             )}
                         </Form.Item>
                         <Form.Item hasFeedback {...formItemLayout} label="Filial">
                             {getFieldDecorator('filial_id',{
+                                initialValue: data.filial_id,
                                 rules: [{ type: 'number', message: '¡Ingrese un ID válido!' }],
                             })(
                                 <InputNumber style={{ width: "10rem"}}/>
