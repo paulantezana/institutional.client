@@ -58,6 +58,7 @@ enquireScreen(b => {
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+import Loader from '../components/Loader';
 import Dashboard from '../routes/Dashboard';
 import Alumno from '../routes/Alumno';
 import Profesor from '../routes/Profesor';
@@ -120,6 +121,7 @@ class App extends Component{
         const currentUser = this.props.usuario.data.token ? decoder(this.props.usuario.data.token) : {};
         const layout = (
             <Layout>
+                {/* <Loader fullScreen={true} spinning={true} /> */}
                 <SiderMenu
                     logo={logo}
                     onMenuClick={this.handleSideMenuClick}
