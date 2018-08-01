@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { InputNumber, Select, Modal, Form, Input, Alert } from 'antd';
+import { InputNumber, Select, Checkbox, Modal, Form, Input, Alert } from 'antd';
 
 const formItemLayout = {
     labelCol: { span: 8 },
@@ -28,32 +28,40 @@ const ModalForm = Form.create()(
                         <Form.Item hasFeedback {...formItemLayout} label="Nombre">
                             {getFieldDecorator('nombre', {
                                 initialValue: data.nombre,
-                                rules: [{ required: true, message: 'Please input the title of collection!' }],
+                                rules: [{ required: true, message: '¡Ingrese un nombre válido!' }],
                             })(
                                 <Input/>
                             )}
                         </Form.Item>
-                        <Form.Item hasFeedback {...formItemLayout} label="Creacion">
-                            {getFieldDecorator('creacion',{
-                                initialValue: data.creacion,
-                                rules: [{ type: 'number', message: '¡Ingrese un año válido!' }],
+                        <Form.Item hasFeedback {...formItemLayout} label="Credito">
+                            {getFieldDecorator('credito',{
+                                initialValue: data.credito,
+                                rules: [{ required: true, type: 'number', message: '¡Ingrese un credito válido!' }],
                             })(
                                 <InputNumber style={{ width: "10rem"}}/>
                             )}
                         </Form.Item>
-                        <Form.Item hasFeedback {...formItemLayout} label="Logo">
-                            {getFieldDecorator('logo',{
-                                initialValue: data.logo,
-                            })(
-                                <Input/>
-                            )}
-                        </Form.Item>
-                        <Form.Item hasFeedback {...formItemLayout} label="Filial">
-                            {getFieldDecorator('filial_id',{
-                                initialValue: data.filial_id,
-                                rules: [{ type: 'number', message: '¡Ingrese un ID válido!' }],
+                        <Form.Item hasFeedback {...formItemLayout} label="Horas">
+                            {getFieldDecorator('horas',{
+                                initialValue: data.horas,
+                                rules: [{ required: true, type: 'number', message: '¡Ingrese una hora válido!' }],
                             })(
                                 <InputNumber style={{ width: "10rem"}}/>
+                            )}
+                        </Form.Item>
+                        <Form.Item hasFeedback {...formItemLayout} label="Modulo">
+                            {getFieldDecorator('modulo_id',{
+                                initialValue: data.modulo_id,
+                                rules: [{  required: true, type: 'number', message: '¡Ingrese un ID válido!' }],
+                            })(
+                                <InputNumber style={{ width: "10rem"}}/>
+                            )}
+                        </Form.Item>
+                        <Form.Item hasFeedback {...formItemLayout} label="Estado">
+                            {getFieldDecorator('estado',{
+                                initialValue: data.estado,
+                            })(
+                                <Checkbox/>
                             )}
                         </Form.Item>
                     </Form>

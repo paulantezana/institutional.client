@@ -6,7 +6,7 @@ import { Query, Mutation } from "react-apollo";
 import ModalForm from './modal';
 
 const CREATE_UNIDAD = gql`
-    mutation CreateUnidad($nombre: String,  $credito: Int, $horas: Int, $modulo_id: Int!, $estado: Boolean){
+    mutation CreateUnidad($nombre: String!,  $credito: Float!, $horas: Int!, $modulo_id: Int!, $estado: Boolean){
         CreateUnidad(nombre: $nombre, credito: $credito, horas: $horas, modulo_id: $modulo_id, estado: $estado){
             id
         }
@@ -14,7 +14,7 @@ const CREATE_UNIDAD = gql`
 `;
 
 const UPDATE_UNIDAD = gql`
-    mutation UpdateUnidad($id: Int!, $nombre: String,  $credito: Int, $horas: Int, $modulo_id: Int!, $estado: Boolean){
+    mutation UpdateUnidad($id: Int!, $nombre: String!,  $credito: Float!, $horas: Int!, $modulo_id: Int!, $estado: Boolean){
         UpdateUnidad(id: $id, nombre: $nombre, credito: $credito, horas: $horas, modulo_id: $modulo_id, estado: $estado){
             id
         }
@@ -26,8 +26,9 @@ const GET_UNIDADID = gql`
         UnidadID(id: $id){
             id
             nombre
-            tipo
-            descripcion
+            credito
+            horas
+            modulo_id
             estado
         }
     }
@@ -78,7 +79,7 @@ class UnidadItem extends PureComponent{
                 </Mutation>
             ) : (
                 <Query query={GET_UNIDADID} variables={{id: currentID}} onError={error=>message.error(error.message)}>
-                    {({ loading, error, data: {CarreraID} }) => (
+                    {({ loading, error, data: {UnidadID} }) => (
                         <Mutation mutation={UPDATE_UNIDAD} onCompleted={this.handleCompleted}>
                             {(UpdateUnidad, { loading, error, data }) => {
                                 return (
@@ -87,7 +88,7 @@ class UnidadItem extends PureComponent{
                                         visible={visible}
                                         confirmLoading={loading}
                                         onCancel={this.handleCancel}
-                                        data={CarreraID}
+                                        data={UnidadID}
                                         errorMessage={(error) ? error.message : false}
                                         onCreate={()=>{
                                             const form = this.formRef.props.form;
@@ -95,6 +96,7 @@ class UnidadItem extends PureComponent{
                                                 if (err) {
                                                     return;
                                                 }
+                                                console.log(values);
                                                 UpdateUnidad({ variables: {...values, id: currentID} });
                                                 form.resetFields();
                                             });
