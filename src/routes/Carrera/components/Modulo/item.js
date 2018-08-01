@@ -5,7 +5,7 @@ import { Query, Mutation } from "react-apollo";
 
 import ModalForm from './modal';
 
-const CREATE_CARRERA = gql`
+const CREATE_MODULO = gql`
     mutation CreateCarrera($nombre: String!, $logo: String, $creacion: Int, $filial_id: Int!){
         CreateCarrera(nombre: $nombre, logo: $logo, creacion: $creacion, filial_id: $filial_id){
             id
@@ -13,7 +13,7 @@ const CREATE_CARRERA = gql`
     }
 `;
 
-const UPDATE_CARRERA = gql`
+const UPDATE_MODULO = gql`
     mutation UpdateCarrera($id: Int!, $nombre: String!, $logo: String, $creacion: Int, $filial_id: Int!){
         UpdateCarrera(id: $id, nombre: $nombre, logo: $logo, creacion: $creacion, filial_id: $filial_id){
             id
@@ -21,19 +21,20 @@ const UPDATE_CARRERA = gql`
     }
 `;
 
-const GET_CARRERAID = gql`
-    query CarreraID($id: Int!){
-        CarreraID(id: $id){
+const GET_MODULOID = gql`
+    query ModuloID($id: Int!){
+        ModuloID(id: $id){
             id
             nombre
-            creacion
-            filial_id
-            logo
+            tipo
+            descripcion
+            estado
         }
     }
 `;
 
-class CarreraItem extends PureComponent{
+
+class Item extends PureComponent{
     constructor(props){
         super(props);
         this.handleCancel = this.handleCancel.bind(this);
@@ -53,8 +54,8 @@ class CarreraItem extends PureComponent{
         const {visible, modalType, currentID} = this.props;
         return (
             (modalType === 'create') ? (
-                <Mutation mutation={CREATE_CARRERA} onCompleted={this.handleCompleted}>
-                    {(CreateAlumno, { loading, error, data }) => {
+                <Mutation mutation={CREATE_MODULO} onCompleted={this.handleCompleted}>
+                    {(CreateUnidad, { loading, error, data }) => {
                         return (
                             <ModalForm
                                 wrappedComponentRef={(formRef) => this.formRef = formRef}
@@ -68,7 +69,7 @@ class CarreraItem extends PureComponent{
                                         if (err) {
                                             return;
                                         }
-                                        CreateAlumno({ variables: values });
+                                        CreateUnidad({ variables: values });
                                         form.resetFields();
                                     });
                                 }
@@ -77,10 +78,10 @@ class CarreraItem extends PureComponent{
                     }}
                 </Mutation>
             ) : (
-                <Query query={GET_CARRERAID} variables={{id: currentID}} onError={error=>message.error(error.message)}>
+                <Query query={GET_MODULOID} variables={{id: currentID}} onError={error=>message.error(error.message)}>
                     {({ loading, error, data: {CarreraID} }) => (
-                        <Mutation mutation={UPDATE_CARRERA} onCompleted={this.handleCompleted}>
-                            {(CreateAlumno, { loading, error, data }) => {
+                        <Mutation mutation={UPDATE_MODULO} onCompleted={this.handleCompleted}>
+                            {(UpdateUnidad, { loading, error, data }) => {
                                 return (
                                     <ModalForm
                                         wrappedComponentRef={(formRef) => this.formRef = formRef}
@@ -95,7 +96,7 @@ class CarreraItem extends PureComponent{
                                                 if (err) {
                                                     return;
                                                 }
-                                                CreateAlumno({ variables: {...values, id: currentID} });
+                                                UpdateUnidad({ variables: {...values, id: currentID} });
                                                 form.resetFields();
                                             });
                                         }
@@ -110,4 +111,4 @@ class CarreraItem extends PureComponent{
     }
 }
 
-export default CarreraItem;
+export default Item;

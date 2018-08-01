@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 
 import { InputNumber, Select, Modal, Form, Input, Alert } from 'antd';
 
@@ -14,7 +14,7 @@ const ModalForm = Form.create()(
             const { getFieldDecorator } = form;
             return (
                 <Modal 
-                    title="Nueva Carrera"
+                    title="Modulo"
                     okText="Guardar"
                     confirmLoading={confirmLoading}
                     onCancel={onCancel}

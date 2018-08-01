@@ -8,7 +8,7 @@ import { message, Card, Button, Icon, Divider, Avatar, Modal, Form, Spin, Alert,
 import StandardTable from 'components/StandardTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './index.scss';
-import Carrera from './components/Carrera';
+
 // alert("Hola");
 
 const GET_CARRERAS = gql`{
@@ -28,7 +28,10 @@ const GET_SEMESTRES = gql`{
 }`;
 
 //////////////////////////////////////////////////////////
-import CarreraItem from './Item/CarreraItem';
+import Carrera from './components/Carrera';
+import Semestre from './components/Semestre';
+import Modulo from './components/Modulo';
+import Unidad from './components/Unidad';
 //////////////////////////////////////////////////////////
 
 class CarreraPage extends PureComponent{
@@ -77,31 +80,17 @@ class CarreraPage extends PureComponent{
                             </div>
                             <Divider/>
                             <div className={styles.row}>
-                                <Button.Group>
-                                    <Button icon="plus" onClick={()=>this.handleOnModalCarrera(true)}/>
-                                    <Button icon="database" onClick={()=>this.handleOnModalCarrera(true)}/>
-                                    <Button icon="filter" onClick={()=>this.handleOnModalCarrera(true)}/>
-                                </Button.Group>
-                                <CarreraItem visible={this.state.modalCarrera} onModal={this.handleOnModalCarrera}/>
-                            </div>
-                            <div className={styles.row}>
-                                <Query query={GET_SEMESTRES}>
-                                    {({ loading, error, data }) => {
-                                        if (error) message.error(error.message);
-                                        return (
-                                            <StandardTable
-                                                dataSource={data.Semestres}
-                                                columns={columnsSemestre}
-                                                pagination={false}
-                                                // rowSelection={rowSelection}
-                                                rowKey={ record => record.id } 
-                                                loading={loading}/>
-                                            );
-                                        }}
-                                </Query>
+                                <Semestre/>
                             </div>
                         </Col>
                         <Col xs={24} sm={12} md={16}>
+                            <div className={styles.row}>
+                                <Modulo/>
+                            </div>
+                            <Divider/>
+                            <div className={styles.row}>
+                                <Unidad/>
+                            </div>
                         </Col>
                     </Row>
                 </Card>

@@ -125,17 +125,15 @@ const NuevoCreateForm = Form.create()(
                         <Form.Item hasFeedback {...formItemLayout} label="Celular">
                             {getFieldDecorator('celular',{
                                 initialValue: data.celular,
-                                rules: [{ message: '¡Ingrese un número de celular válido!' }],
                             })(
-                                <InputNumber style={{ width: "10rem"}}/>
+                                <InputNumber type="number" style={{ width: "10rem"}}/>
                             )}
                         </Form.Item>
                         <Form.Item hasFeedback {...formItemLayout} label="Telefono">
                             {getFieldDecorator('telefono',{
                                 initialValue: data.telefono,
-                                rules: [{ message: '¡Ingrese un número de Telefono válido!' }],
                             })(
-                                <InputNumber style={{ width: "10rem"}}/>
+                                <InputNumber  type="number" style={{ width: "10rem"}}/>
                             )}
                         </Form.Item>
                         <Form.Item hasFeedback {...formItemLayout} label="Estado Civil">

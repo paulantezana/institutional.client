@@ -8,23 +8,24 @@ import { message, Button } from 'antd';
 import StandardTable from 'components/StandardTable';
 
 import styles from './index.scss';
-import CarreraItem from './item';
+import ModuloItem from './item';
 
-const GET_CARRERAS = gql`{
-    Carreras{
+const GET_MODULOS = gql`{
+    Modulos{
         id
         nombre
+        tipo
     }
 }`;
 
-class Carrera extends PureComponent{
+class Modulo extends PureComponent{
     constructor(props){
         super(props);
         this.state = {
             modalVisible: false,
             modalType: 'create',
             currentID: 0,
-        }
+        };
         this.handleOnModal = this.handleOnModal.bind(this);
         this.handleOnEdit = this.handleOnEdit.bind(this);
     }
@@ -52,6 +53,11 @@ class Carrera extends PureComponent{
                 key: 'nombre',
             },
             {
+                title: 'Tipo',
+                dataIndex: 'tipo',
+                key: 'tipo',
+            },
+            {
                 title: 'Accion',
                 key: 'accion',
                 render: (a, record)=>{
@@ -65,7 +71,7 @@ class Carrera extends PureComponent{
             }
         ];
         return(
-            <Query query={GET_CARRERAS} 
+            <Query query={GET_MODULOS} 
                 fetchPolicy="cache-and-network"
                 onError={error=>message.error(error.message)}>
                 {({ loading, error, refetch, data }) => {
@@ -76,11 +82,11 @@ class Carrera extends PureComponent{
                                     <Button icon="plus" onClick={()=>this.handleOnModal(true)}/>
                                     <Button icon="reload" onClick={()=>refetch()}/>  
                                 </Button.Group>
-                                <CarreraItem visible={this.state.modalVisible} onModal={this.handleOnModal} refetchTable={refetch} currentID={this.state.currentID} modalType={this.state.modalType}/>
-                                <span>Programas de estudio</span>
+                                <ModuloItem visible={this.state.modalVisible} onModal={this.handleOnModal} refetchTable={refetch} currentID={this.state.currentID} modalType={this.state.modalType}/>
+                                <span>Modulos</span>
                             </div>
                             <StandardTable
-                                dataSource={data.Carreras}
+                                dataSource={data.Modulos}
                                 columns={columns}
                                 pagination={false}
                                 // rowSelection={rowSelection}
@@ -90,8 +96,8 @@ class Carrera extends PureComponent{
                         );
                     }}
             </Query>
-        )
+       ) 
     }
 }
 
-export default Carrera;
+export default Modulo;
