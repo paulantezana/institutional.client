@@ -42,6 +42,7 @@ class StandardTable extends PureComponent {
                     dataSource={dataSource}
                     columns={columns}
                     size="small"
+                    bordered
                     pagination={pagination}
                     onChange={this.handleTableChange}
                 />

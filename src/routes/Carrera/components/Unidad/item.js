@@ -3,6 +3,8 @@ import React, { PureComponent } from 'react';
 import gql from "graphql-tag";
 import { Query, Mutation } from "react-apollo";
 
+import {message} from 'antd';
+
 import ModalForm from './modal';
 
 const CREATE_UNIDAD = gql`
@@ -52,6 +54,7 @@ class UnidadItem extends PureComponent{
 
     render(){
         const {visible, modalType, currentID} = this.props;
+        console.log(currentID);
         return (
             (modalType === 'create') ? (
                 <Mutation mutation={CREATE_UNIDAD} onCompleted={this.handleCompleted}>
